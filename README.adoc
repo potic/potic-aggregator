@@ -1,0 +1,18 @@
+= potic-aggregator
+:linkattrs:
+
+Service for aggregating sections.
+
+== Travis job
+
+image:https://travis-ci.org/potic/potic-aggregator.svg?branch=develop["Travis job", link="https://travis-ci.org/potic/potic-aggregator"]
+
+== Docker repository
+
+https://hub.docker.com/r/potic/potic-aggregator/
+
+== Documentation
+
+link:src/docs/howto-start-docker.adoc[HOWTO: start service as docker container, window="_blank"]
+
+link:src/docs/howto-run-service.adoc[HOWTO: run service, window="_blank"]

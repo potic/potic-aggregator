@@ -1,0 +1,25 @@
+= HOWTO: start service as docker container
+
+== Cleaning previously started container
+
+[source,shell]
+----
+docker ps -a
+docker kill potic_aggregator; docker rm potic_aggregator
+----
+
+== Configuration parameters
+
+Following environment variable are available for global service configuration:
+
+ROOT_LOG_LEVEL - logging level for third-party libraries (default is INFO)
+
+SERVICE_LOG_LEVEL - logging level for service code (default is INFO)
+
+== Start container
+
+[source,shell]
+----
+docker pull potic/potic-aggregator:?TAG
+docker run -dit --name potic_aggregator -v /logs:/logs -p 404201:8080 potic/potic-aggregator:?TAG
+----
