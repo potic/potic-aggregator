@@ -24,6 +24,8 @@ dependencies {
 
     compile 'org.springframework.boot:spring-boot-starter-web'
 
+    compile 'io.github.http-builder-ng:http-builder-ng-core:0.16.1'
+
     compile 'org.slf4j:slf4j-api'
     compile 'ch.qos.logback:logback-classic'
 

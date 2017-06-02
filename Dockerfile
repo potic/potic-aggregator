@@ -8,5 +8,6 @@ RUN unzip /usr/src/potic-aggregator/potic-aggregator-*.zip -d /usr/app/ && ln -s
 
 WORKDIR /usr/app/potic-aggregator
 
+EXPOSE 8080
 ENTRYPOINT ["./bin/potic-aggregator"]
 CMD []
