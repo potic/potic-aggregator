@@ -7,12 +7,16 @@ Service for aggregating sections.
 
 image:https://travis-ci.org/potic/potic-aggregator.svg?branch=develop["Travis job", link="https://travis-ci.org/potic/potic-aggregator"]
 
+== Code coverage
+
+image:https://codecov.io/gh/potic/potic-aggregator/branch/develop/graph/badge.svg["Code coverage", link="https://codecov.io/gh/potic/potic-aggregator"]
+
 == Docker repository
 
 https://hub.docker.com/r/potic/potic-aggregator/
 
 == Documentation
 
-link:src/docs/howto-start-docker.adoc[HOWTO: start service as docker container, window="_blank"]
+link:src/main/scripts/deploy[HOWTO: start service as docker container, window="_blank"]
 
-link:src/docs/howto-run-service.adoc[HOWTO: run service, window="_blank"]
+link:src/docs/configuration-parameters.adoc[Service configuration parameters]

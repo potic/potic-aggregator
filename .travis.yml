@@ -18,10 +18,16 @@ before_install:
 - chmod +x gradlew
 
 install:
-- ./gradlew build -Dscan
+- "./gradlew build jacocoTestReport --scan"
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
 
 before_script:
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+- eval "$(ssh-agent -s)"
+- chmod 600 .travis/id_rsa
+- ssh-add .travis/id_rsa
 
 script:
 - export DOCKER_REPO=potic/potic-aggregator
@@ -29,6 +35,7 @@ script:
 - docker build -t $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER .
 - docker tag $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER $DOCKER_REPO:$TAG
 - docker push $DOCKER_REPO
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_USER"@"$DEPLOY_HOST" MONGO_PASSWORD=$MONGO_PASSWORD 'bash -s' < src/main/scripts/deploy.sh; fi
 
 env:
   global:
