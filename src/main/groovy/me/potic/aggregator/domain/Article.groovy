@@ -1,5 +1,8 @@
 package me.potic.aggregator.domain
 
+import groovy.transform.EqualsAndHashCode
+
+@EqualsAndHashCode(includes = 'id')
 class Article {
 
     String id
