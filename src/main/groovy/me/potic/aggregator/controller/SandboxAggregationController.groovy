@@ -41,7 +41,7 @@ class SandboxAggregationController {
         while (randomArticles.size() < SANDBOX_SECTION_SIZE) {
             List randomResponse = articlesService.get {
                 request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
-                request.uri.query = [page: RandomUtils.nextInt(0, 1000), size: 1 ]
+                request.uri.query = [page: RandomUtils.nextInt(0, 100), size: 1 ]
             }
 
             if (randomResponse != null && randomResponse.size() > 0) {
