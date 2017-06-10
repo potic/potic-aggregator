@@ -55,17 +55,19 @@ class SandboxAggregationController {
 
     private Section randomArticlesSection() {
         timed "  preparing 'random articles' section", {
-            Set randomArticles = []
+            Set randomIndexes = []
 
-            while (randomArticles.size() < SANDBOX_SECTION_SIZE) {
-                List randomResponse = requestArticles(RandomUtils.nextInt(SANDBOX_SECTION_SIZE + 1, 100), 1)
-
-                if (randomResponse != null && randomResponse.size() > 0) {
-                    randomArticles << randomResponse.first()
-                }
+            while (randomIndexes.size() < SANDBOX_SECTION_SIZE) {
+                randomIndexes << RandomUtils.nextInt(SANDBOX_SECTION_SIZE + 1, 100)
             }
 
-            Section.builder().name('random articles').articles(randomArticles as List).build()
+            withPool {
+                List randomArticles = randomIndexes.collectParallel {
+                    requestArticles(it, 1) 
+                }
+
+                Section.builder().name('random articles').articles(randomArticles).build()
+            }
         }
     }
 
