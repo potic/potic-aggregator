@@ -21,6 +21,8 @@ class SandboxAggregationController {
     static final String SANDBOX_USER_ID = '58b1800dc9e77c0001d1d702'
     static final Integer SANDBOX_SECTION_SIZE = 5
 
+    static final Integer REQUEST_SIZE = 25
+
     static final Integer LONGREAD_THRESHOLD = 500
 
     @Autowired
@@ -74,16 +76,16 @@ class SandboxAggregationController {
     private Section shortArticlesSection() {
         timed "  preparing 'latest short articles' section", {
             List shortArticles = []
-            int requestSize = SANDBOX_SECTION_SIZE
+            int pageIndex = 0
 
             while (shortArticles.size() < SANDBOX_SECTION_SIZE) {
-                List response = requestArticles(0, requestSize)
+                List response = requestArticles(pageIndex, REQUEST_SIZE)
 
                 if (response != null && response.size() > 0) {
-                    shortArticles = response.findAll { it.wordCount < LONGREAD_THRESHOLD }
+                    shortArticles.addAll(response.findAll({ it.wordCount < LONGREAD_THRESHOLD }))
                 }
 
-                requestSize += SANDBOX_SECTION_SIZE
+                pageIndex++
             }
 
             Section.builder().name('latest short articles').articles(shortArticles.take(SANDBOX_SECTION_SIZE)).build()
@@ -93,19 +95,19 @@ class SandboxAggregationController {
     private Section longArticlesSection() {
         timed "  preparing 'latest long reads' section", {
             List longArticles = []
-            int requestSize = SANDBOX_SECTION_SIZE
+            int pageIndex = 0
 
             while (longArticles.size() < SANDBOX_SECTION_SIZE) {
-                List response = requestArticles(0, requestSize)
+                List response = requestArticles(pageIndex, REQUEST_SIZE)
 
                 if (response != null && response.size() > 0) {
-                    longArticles = response.findAll { it.wordCount >= LONGREAD_THRESHOLD }
+                    longArticles.addAll(response.findAll({ it.wordCount >= LONGREAD_THRESHOLD }))
                 }
 
-                requestSize += SANDBOX_SECTION_SIZE - longArticles.size()
+                pageIndex++
             }
 
-            Section.builder().name('latest long reads').articles(longArticles).build()
+            Section.builder().name('latest long reads').articles(longArticles.take(SANDBOX_SECTION_SIZE)).build()
         }
     }
 
