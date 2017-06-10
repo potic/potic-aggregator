@@ -3,6 +3,7 @@ package me.potic.aggregator.controller
 import groovy.util.logging.Slf4j
 import groovyx.gpars.dataflow.Promise
 import groovyx.net.http.HttpBuilder
+import me.potic.aggregator.domain.Article
 import me.potic.aggregator.domain.Section
 import org.apache.commons.lang3.RandomUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,6 +29,8 @@ class SandboxAggregationController {
     @CrossOrigin
     @GetMapping(path = '/sandbox/section')
     @ResponseBody List<Section> sandboxSections() {
+        log.info '/sandbox/section request received'
+
         withPool {
             Promise latestArticlesSection = this.&latestArticlesSection.asyncFun().call()
             Promise randomArticlesSection = this.&randomArticlesSection.asyncFun().call()
@@ -44,22 +47,20 @@ class SandboxAggregationController {
     }
 
     private Section latestArticlesSection() {
-        List latestArticles = articlesService.get {
-            request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
-            request.uri.query = [ page: 0, size: SANDBOX_SECTION_SIZE ]
-        }
+        log.info "preparing 'latest articles' section..."
+
+        List latestArticles = requestArticles(0, SANDBOX_SECTION_SIZE)
 
         Section.builder().name('latest articles').articles(latestArticles).build()
     }
 
     private Section randomArticlesSection() {
+        log.info "preparing 'random articles' section..."
+
         Set randomArticles = []
 
         while (randomArticles.size() < SANDBOX_SECTION_SIZE) {
-            List randomResponse = articlesService.get {
-                request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
-                request.uri.query = [ page: RandomUtils.nextInt(SANDBOX_SECTION_SIZE + 1, 100), size: 1 ]
-            }
+            List randomResponse = requestArticles(RandomUtils.nextInt(SANDBOX_SECTION_SIZE + 1, 100), 1)
 
             if (randomResponse != null && randomResponse.size() > 0) {
                 randomArticles << randomResponse.first()
@@ -70,14 +71,13 @@ class SandboxAggregationController {
     }
 
     private Section shortArticlesSection() {
+        log.info "preparing 'latest short articles' section..."
+
         List shortArticles = []
         int requestSize = SANDBOX_SECTION_SIZE
 
         while (shortArticles.size() < SANDBOX_SECTION_SIZE) {
-            List response = articlesService.get {
-                request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
-                request.uri.query = [ page: 0, size: requestSize ]
-            }
+            List response = requestArticles(0, requestSize)
 
             if (response != null && response.size() > 0) {
                 shortArticles = response.findAll { it.wordCount < LONGREAD_THRESHOLD }
@@ -85,18 +85,17 @@ class SandboxAggregationController {
             requestSize++
         }
 
-        Section.builder().name('short articles').articles(shortArticles).build()
+        Section.builder().name('latest short articles').articles(shortArticles).build()
     }
 
     private Section longArticlesSection() {
+        log.info "preparing 'latest long reads' section..."
+
         List longArticles = []
         int requestSize = SANDBOX_SECTION_SIZE
 
         while (longArticles.size() < SANDBOX_SECTION_SIZE) {
-            List response = articlesService.get {
-                request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
-                request.uri.query = [ page: 0, size: requestSize ]
-            }
+            List response = requestArticles(0, requestSize)
 
             if (response != null && response.size() > 0) {
                 longArticles = response.findAll { it.wordCount >= LONGREAD_THRESHOLD }
@@ -104,6 +103,15 @@ class SandboxAggregationController {
             requestSize++
         }
 
-        Section.builder().name('longreads').articles(longArticles).build()
+        Section.builder().name('latest long reads').articles(longArticles).build()
+    }
+
+    private List<Article> requestArticles(int page, int size) {
+        log.info "requesting $size articles from page #$page"
+
+        articlesService.get {
+            request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
+            request.uri.query = [ page: page, size: size ]
+        }
     }
 }
