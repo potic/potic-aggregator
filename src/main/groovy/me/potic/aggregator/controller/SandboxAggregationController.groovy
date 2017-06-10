@@ -65,7 +65,7 @@ class SandboxAggregationController {
 
             withPool {
                 List randomArticles = randomIndexes.collectParallel {
-                    requestArticles(it, 1) 
+                    requestArticles(it, 1).first()
                 }
 
                 Section.builder().name('random articles').articles(randomArticles).build()
