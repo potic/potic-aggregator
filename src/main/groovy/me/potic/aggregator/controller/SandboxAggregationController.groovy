@@ -31,7 +31,9 @@ class SandboxAggregationController {
     @ResponseBody List<Section> sandboxSections() {
         log.info '/sandbox/section request received'
 
-        withPool {
+        long startTime = System.currentTimeMillis()
+
+        List<Section> sandboxSections = withPool {
             Promise latestArticlesSection = this.&latestArticlesSection.asyncFun().call()
             Promise randomArticlesSection = this.&randomArticlesSection.asyncFun().call()
             Promise shortArticlesSection = this.&shortArticlesSection.asyncFun().call()
@@ -44,6 +46,10 @@ class SandboxAggregationController {
                     longArticlesSection.get()
             ]
         }
+
+        log.info "/sandbox/section done in ${(System.currentTimeMillis() - startTime)/1000}s"
+
+        return sandboxSections
     }
 
     private Section latestArticlesSection() {
