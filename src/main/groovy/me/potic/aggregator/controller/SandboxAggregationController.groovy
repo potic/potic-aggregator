@@ -2,7 +2,6 @@ package me.potic.aggregator.controller
 
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpBuilder
-import me.potic.aggregator.domain.Article
 import me.potic.aggregator.domain.Section
 import org.apache.commons.lang3.RandomUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -71,7 +70,7 @@ class SandboxAggregationController {
             }
 
             if (response != null && response.size() > 0) {
-                shortArticles = response.findAll({ Article it -> it.wordCount < LONGREAD_THRESHOLD })
+                shortArticles = response.findAll { it.wordCount < LONGREAD_THRESHOLD }
             }
             requestSize++
         }
@@ -90,7 +89,7 @@ class SandboxAggregationController {
             }
 
             if (response != null && response.size() > 0) {
-                longArticles = response.findAll({ Article it -> it.wordCount >= LONGREAD_THRESHOLD })
+                longArticles = response.findAll { it.wordCount >= LONGREAD_THRESHOLD }
             }
             requestSize++
         }
