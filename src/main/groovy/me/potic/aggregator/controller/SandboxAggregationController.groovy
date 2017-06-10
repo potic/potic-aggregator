@@ -29,97 +29,101 @@ class SandboxAggregationController {
     @CrossOrigin
     @GetMapping(path = '/sandbox/section')
     @ResponseBody List<Section> sandboxSections() {
-        log.info '/sandbox/section request received'
+        timed '/sandbox/section request', {
+            withPool {
+                Promise latestArticlesSection = this.&latestArticlesSection.asyncFun().call()
+                Promise randomArticlesSection = this.&randomArticlesSection.asyncFun().call()
+                Promise shortArticlesSection = this.&shortArticlesSection.asyncFun().call()
+                Promise longArticlesSection = this.&longArticlesSection.asyncFun().call()
 
-        long startTime = System.currentTimeMillis()
-
-        List<Section> sandboxSections = withPool {
-            Promise latestArticlesSection = this.&latestArticlesSection.asyncFun().call()
-            Promise randomArticlesSection = this.&randomArticlesSection.asyncFun().call()
-            Promise shortArticlesSection = this.&shortArticlesSection.asyncFun().call()
-            Promise longArticlesSection = this.&longArticlesSection.asyncFun().call()
-
-            return [
-                    latestArticlesSection.get(),
-                    randomArticlesSection.get(),
-                    shortArticlesSection.get(),
-                    longArticlesSection.get()
-            ]
+                return [
+                        latestArticlesSection.get(),
+                        randomArticlesSection.get(),
+                        shortArticlesSection.get(),
+                        longArticlesSection.get()
+                ]
+            }
         }
-
-        log.info "/sandbox/section done in ${(System.currentTimeMillis() - startTime)/1000}s"
-
-        return sandboxSections
     }
 
     private Section latestArticlesSection() {
-        log.info "preparing 'latest articles' section..."
-
-        List latestArticles = requestArticles(0, SANDBOX_SECTION_SIZE)
-
-        Section.builder().name('latest articles').articles(latestArticles).build()
+        timed "preparing 'latest articles' section", {
+            List latestArticles = requestArticles(0, SANDBOX_SECTION_SIZE)
+            Section.builder().name('latest articles').articles(latestArticles).build()
+        }
     }
 
     private Section randomArticlesSection() {
-        log.info "preparing 'random articles' section..."
+        timed "preparing 'random articles' section", {
+            Set randomArticles = []
 
-        Set randomArticles = []
+            while (randomArticles.size() < SANDBOX_SECTION_SIZE) {
+                List randomResponse = requestArticles(RandomUtils.nextInt(SANDBOX_SECTION_SIZE + 1, 100), 1)
 
-        while (randomArticles.size() < SANDBOX_SECTION_SIZE) {
-            List randomResponse = requestArticles(RandomUtils.nextInt(SANDBOX_SECTION_SIZE + 1, 100), 1)
-
-            if (randomResponse != null && randomResponse.size() > 0) {
-                randomArticles << randomResponse.first()
+                if (randomResponse != null && randomResponse.size() > 0) {
+                    randomArticles << randomResponse.first()
+                }
             }
-        }
 
-        Section.builder().name('random articles').articles(randomArticles as List).build()
+            Section.builder().name('random articles').articles(randomArticles as List).build()
+        }
     }
 
     private Section shortArticlesSection() {
-        log.info "preparing 'latest short articles' section..."
+        timed "preparing 'latest short articles' section", {
+            List shortArticles = []
+            int requestSize = SANDBOX_SECTION_SIZE
 
-        List shortArticles = []
-        int requestSize = SANDBOX_SECTION_SIZE
+            while (shortArticles.size() < SANDBOX_SECTION_SIZE) {
+                List response = requestArticles(0, requestSize)
 
-        while (shortArticles.size() < SANDBOX_SECTION_SIZE) {
-            List response = requestArticles(0, requestSize)
+                if (response != null && response.size() > 0) {
+                    shortArticles = response.findAll { it.wordCount < LONGREAD_THRESHOLD }
+                }
 
-            if (response != null && response.size() > 0) {
-                shortArticles = response.findAll { it.wordCount < LONGREAD_THRESHOLD }
+                requestSize += SANDBOX_SECTION_SIZE - shortArticles.size()
             }
 
-            requestSize += SANDBOX_SECTION_SIZE - shortArticles.size()
+            Section.builder().name('latest short articles').articles(shortArticles).build()
         }
-
-        Section.builder().name('latest short articles').articles(shortArticles).build()
     }
 
     private Section longArticlesSection() {
-        log.info "preparing 'latest long reads' section..."
+        timed "preparing 'latest long reads' section", {
+            List longArticles = []
+            int requestSize = SANDBOX_SECTION_SIZE
 
-        List longArticles = []
-        int requestSize = SANDBOX_SECTION_SIZE
+            while (longArticles.size() < SANDBOX_SECTION_SIZE) {
+                List response = requestArticles(0, requestSize)
 
-        while (longArticles.size() < SANDBOX_SECTION_SIZE) {
-            List response = requestArticles(0, requestSize)
+                if (response != null && response.size() > 0) {
+                    longArticles = response.findAll { it.wordCount >= LONGREAD_THRESHOLD }
+                }
 
-            if (response != null && response.size() > 0) {
-                longArticles = response.findAll { it.wordCount >= LONGREAD_THRESHOLD }
+                requestSize += SANDBOX_SECTION_SIZE - longArticles.size()
             }
 
-            requestSize += SANDBOX_SECTION_SIZE - longArticles.size()
+            Section.builder().name('latest long reads').articles(longArticles).build()
         }
-
-        Section.builder().name('latest long reads').articles(longArticles).build()
     }
 
     private List<Article> requestArticles(int page, int size) {
-        log.info "requesting $size articles from page #$page"
+        timed "requesting $size articles from page #$page", {
+            articlesService.get {
+                request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
+                request.uri.query = [ page: page, size: size ]
+            }
+        }
+    }
 
-        articlesService.get {
-            request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
-            request.uri.query = [ page: page, size: size ]
+    private <T> T timed(String name, Closure<T> action) {
+        log.info "$name started"
+        long startTime = System.currentTimeMillis()
+
+        try {
+            return action.call()
+        } finally {
+            log.info "$name finsihed in ${(System.currentTimeMillis() - startTime)/1000}s"
         }
     }
 }
