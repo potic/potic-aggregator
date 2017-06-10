@@ -82,7 +82,8 @@ class SandboxAggregationController {
             if (response != null && response.size() > 0) {
                 shortArticles = response.findAll { it.wordCount < LONGREAD_THRESHOLD }
             }
-            requestSize++
+
+            requestSize += SANDBOX_SECTION_SIZE - shortArticles.size()
         }
 
         Section.builder().name('latest short articles').articles(shortArticles).build()
@@ -100,7 +101,8 @@ class SandboxAggregationController {
             if (response != null && response.size() > 0) {
                 longArticles = response.findAll { it.wordCount >= LONGREAD_THRESHOLD }
             }
-            requestSize++
+
+            requestSize += SANDBOX_SECTION_SIZE - longArticles.size()
         }
 
         Section.builder().name('latest long reads').articles(longArticles).build()
