@@ -1,6 +1,7 @@
 package me.potic.aggregator.controller
 
 import groovy.util.logging.Slf4j
+import groovyx.gpars.dataflow.Promise
 import groovyx.net.http.HttpBuilder
 import me.potic.aggregator.domain.Section
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
+import static groovyx.gpars.GParsPool.withPool
 import static java.util.Collections.shuffle
 
 @RestController
@@ -26,12 +28,19 @@ class SandboxAggregationController {
     @CrossOrigin
     @GetMapping(path = '/sandbox/section')
     @ResponseBody List<Section> sandboxSections() {
-        [
-                latestArticlesSection(),
-                randomArticlesSection(),
-                shortArticlesSection(),
-                longArticlesSection()
-        ]
+        withPool {
+            Promise latestArticlesSection = this.&latestArticlesSection.asyncFun().call()
+            Promise randomArticlesSection = this.&randomArticlesSection.asyncFun().call()
+            Promise shortArticlesSection = this.&shortArticlesSection.asyncFun().call()
+            Promise longArticlesSection = this.&longArticlesSection.asyncFun().call()
+
+            return [
+                    latestArticlesSection.get(),
+                    randomArticlesSection.get(),
+                    shortArticlesSection.get(),
+                    longArticlesSection.get()
+            ]
+        }
     }
 
     private Section latestArticlesSection() {
