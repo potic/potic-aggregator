@@ -47,14 +47,14 @@ class SandboxAggregationController {
     }
 
     private Section latestArticlesSection() {
-        timed "preparing 'latest articles' section", {
+        timed "  preparing 'latest articles' section", {
             List latestArticles = requestArticles(0, SANDBOX_SECTION_SIZE)
             Section.builder().name('latest articles').articles(latestArticles).build()
         }
     }
 
     private Section randomArticlesSection() {
-        timed "preparing 'random articles' section", {
+        timed "  preparing 'random articles' section", {
             Set randomArticles = []
 
             while (randomArticles.size() < SANDBOX_SECTION_SIZE) {
@@ -70,7 +70,7 @@ class SandboxAggregationController {
     }
 
     private Section shortArticlesSection() {
-        timed "preparing 'latest short articles' section", {
+        timed "  preparing 'latest short articles' section", {
             List shortArticles = []
             int requestSize = SANDBOX_SECTION_SIZE
 
@@ -81,15 +81,15 @@ class SandboxAggregationController {
                     shortArticles = response.findAll { it.wordCount < LONGREAD_THRESHOLD }
                 }
 
-                requestSize += SANDBOX_SECTION_SIZE - shortArticles.size()
+                requestSize += SANDBOX_SECTION_SIZE
             }
 
-            Section.builder().name('latest short articles').articles(shortArticles).build()
+            Section.builder().name('latest short articles').articles(shortArticles.take(SANDBOX_SECTION_SIZE)).build()
         }
     }
 
     private Section longArticlesSection() {
-        timed "preparing 'latest long reads' section", {
+        timed "  preparing 'latest long reads' section", {
             List longArticles = []
             int requestSize = SANDBOX_SECTION_SIZE
 
@@ -108,7 +108,7 @@ class SandboxAggregationController {
     }
 
     private List<Article> requestArticles(int page, int size) {
-        timed "requesting $size articles from page #$page", {
+        timed "    requesting $size articles from page #$page", {
             articlesService.get {
                 request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
                 request.uri.query = [ page: page, size: size ]
@@ -123,7 +123,7 @@ class SandboxAggregationController {
         try {
             return action.call()
         } finally {
-            log.info "$name finsihed in ${(System.currentTimeMillis() - startTime)/1000}s"
+            log.info "$name finished in ${(System.currentTimeMillis() - startTime)/1000}s"
         }
     }
 }
