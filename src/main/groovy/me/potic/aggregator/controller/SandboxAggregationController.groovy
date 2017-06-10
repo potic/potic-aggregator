@@ -2,6 +2,7 @@ package me.potic.aggregator.controller
 
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpBuilder
+import me.potic.aggregator.domain.Article
 import me.potic.aggregator.domain.Section
 import org.apache.commons.lang3.RandomUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,13 +18,20 @@ class SandboxAggregationController {
     static final String SANDBOX_USER_ID = '58b1800dc9e77c0001d1d702'
     static final Integer SANDBOX_SECTION_SIZE = 5
 
+    static final Integer LONGREAD_THRESHOLD = 500
+
     @Autowired
     HttpBuilder articlesService
 
     @CrossOrigin
     @GetMapping(path = '/sandbox/section')
     @ResponseBody List<Section> sandboxSections() {
-        [ latestArticlesSection(), randomArticlesSection() ]
+        [
+                latestArticlesSection(),
+                randomArticlesSection(),
+                shortArticlesSection(),
+                longArticlesSection()
+        ]
     }
 
     private Section latestArticlesSection() {
@@ -36,12 +44,12 @@ class SandboxAggregationController {
     }
 
     private Section randomArticlesSection() {
-        Set randomArticles = [] as Set
+        Set randomArticles = []
 
         while (randomArticles.size() < SANDBOX_SECTION_SIZE) {
             List randomResponse = articlesService.get {
                 request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
-                request.uri.query = [page: RandomUtils.nextInt(0, 100), size: 1 ]
+                request.uri.query = [ page: RandomUtils.nextInt(SANDBOX_SECTION_SIZE + 1, 100), size: 1 ]
             }
 
             if (randomResponse != null && randomResponse.size() > 0) {
@@ -50,5 +58,43 @@ class SandboxAggregationController {
         }
 
         Section.builder().name('random articles').articles(randomArticles as List).build()
+    }
+
+    private Section shortArticlesSection() {
+        List shortArticles = []
+        int requestSize = SANDBOX_SECTION_SIZE
+
+        while (shortArticles.size() < SANDBOX_SECTION_SIZE) {
+            List response = articlesService.get {
+                request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
+                request.uri.query = [ page: 0, size: requestSize ]
+            }
+
+            if (response != null && response.size() > 0) {
+                shortArticles = response.findAll({ Article it -> it.wordCount < LONGREAD_THRESHOLD })
+            }
+            requestSize++
+        }
+
+        Section.builder().name('short articles').articles(shortArticles).build()
+    }
+
+    private Section longArticlesSection() {
+        List longArticles = []
+        int requestSize = SANDBOX_SECTION_SIZE
+
+        while (longArticles.size() < SANDBOX_SECTION_SIZE) {
+            List response = articlesService.get {
+                request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
+                request.uri.query = [ page: 0, size: requestSize ]
+            }
+
+            if (response != null && response.size() > 0) {
+                longArticles = response.findAll({ Article it -> it.wordCount >= LONGREAD_THRESHOLD })
+            }
+            requestSize++
+        }
+
+        Section.builder().name('longreads').articles(longArticles).build()
     }
 }
