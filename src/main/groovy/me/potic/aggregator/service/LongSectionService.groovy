@@ -30,7 +30,7 @@ class LongSectionService {
             List response = articlesService.unreadForSandboxUser(pageIndex, REQUEST_SIZE)
 
             if (response != null && response.size() > 0) {
-                List longreads = response.drop(pageOffset).findAll({ it.wordCount >= LONGREAD_THRESHOLD })
+                List longreads = response.findAll({ it.wordCount >= LONGREAD_THRESHOLD }).drop(pageOffset)
                 lastAddedCount = longreads.size()
                 longArticles.addAll(longreads)
             } else {

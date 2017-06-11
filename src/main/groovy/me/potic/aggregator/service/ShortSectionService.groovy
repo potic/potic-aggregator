@@ -30,7 +30,7 @@ class ShortSectionService {
             List response = articlesService.unreadForSandboxUser(pageIndex, REQUEST_SIZE)
 
             if (response != null && response.size() > 0) {
-                List shorts = response.drop(pageOffset).findAll({ it.wordCount < LONGREAD_THRESHOLD })
+                List shorts = response.findAll({ it.wordCount < LONGREAD_THRESHOLD }).drop(pageOffset)
                 lastAddedCount = shorts.size()
                 shortArticles.addAll(shorts)
             } else {
