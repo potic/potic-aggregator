@@ -1,13 +1,8 @@
 package me.potic.aggregator.controller
 
 import groovy.util.logging.Slf4j
-import me.potic.aggregator.domain.Section
 import me.potic.aggregator.domain.SectionChunk
-import me.potic.aggregator.service.LatestSectionService
-import me.potic.aggregator.service.LongSectionService
-import me.potic.aggregator.service.RandomSectionService
-import me.potic.aggregator.service.ShortSectionService
-import me.potic.aggregator.service.TimedService
+import me.potic.aggregator.service.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -40,7 +35,7 @@ class SandboxChunksController {
 
     @CrossOrigin
     @GetMapping(path = '/sandbox/section/random/{chunkId}')
-    @ResponseBody Section randomArticlesSection(@PathVariable String chunkId) {
+    @ResponseBody SectionChunk randomArticlesSection(@PathVariable String chunkId) {
         timedService.timed "/sandbox/section/random/${chunkId} request", {
             randomSectionService.fetchChunkById()
         }
@@ -48,7 +43,7 @@ class SandboxChunksController {
 
     @CrossOrigin
     @GetMapping(path = '/sandbox/section/short/{chunkId}')
-    @ResponseBody Section shortArticlesSection(@PathVariable String chunkId) {
+    @ResponseBody SectionChunk shortArticlesSection(@PathVariable String chunkId) {
         timedService.timed "/sandbox/section/short/${chunkId} request", {
             shortSectionService.fetchChunkById(chunkId)
         }
@@ -56,7 +51,7 @@ class SandboxChunksController {
 
     @CrossOrigin
     @GetMapping(path = '/sandbox/section/long/{chunkId}')
-    @ResponseBody Section longArticlesSection(@PathVariable String chunkId) {
+    @ResponseBody SectionChunk longArticlesSection(@PathVariable String chunkId) {
         timedService.timed "/sandbox/section/long/${chunkId} request", {
             longSectionService.fetchChunkById(chunkId)
         }
