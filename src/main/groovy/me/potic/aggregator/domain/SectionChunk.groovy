@@ -3,13 +3,11 @@ package me.potic.aggregator.domain
 import groovy.transform.builder.Builder
 
 @Builder
-class Section {
+class SectionChunk {
 
     String id
 
-    String title
+    List<Article> articles
 
-    String type
-
-    SectionChunk firstChunk
+    String nextChunkId
 }
