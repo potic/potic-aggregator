@@ -13,12 +13,12 @@ class ArticlesService {
     static final String SANDBOX_USER_ID = '58b1800dc9e77c0001d1d702'
 
     @Autowired
-    HttpBuilder articlesService
+    HttpBuilder articlesRest
 
     List<Article> unreadForSandboxUser(int page, int size) {
         log.info "requesting $size articles from page #$page"
 
-        articlesService.get {
+        articlesRest.get {
             request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
             request.uri.query = [ page: page, size: size ]
         }

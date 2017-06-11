@@ -15,7 +15,7 @@ class Application {
     }
 
     @Bean
-    HttpBuilder articlesService() {
+    HttpBuilder articlesRest() {
         HttpBuilder.configure {
             request.uri = ARTICLES_SERVICE_URL
         }
