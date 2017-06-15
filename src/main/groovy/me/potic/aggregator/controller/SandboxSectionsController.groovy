@@ -58,7 +58,7 @@ class SandboxSectionsController {
             Section.builder()
                     .id('latest')
                     .title('latest articles')
-                    .type('investigation')
+                    .type('expandable')
                     .firstChunk(latestSectionService.fetchChunkById('0'))
                     .build()
         }
@@ -71,7 +71,7 @@ class SandboxSectionsController {
             Section.builder()
                     .id('random')
                     .title('random articles')
-                    .type('investigation')
+                    .type('fixed')
                     .firstChunk(randomSectionService.fetchChunkById())
                     .build()
         }
@@ -84,7 +84,7 @@ class SandboxSectionsController {
             Section.builder()
                     .id('short')
                     .title('latest short articles')
-                    .type('investigation')
+                    .type('expandable')
                     .firstChunk(shortSectionService.fetchChunkById('0:0'))
                     .build()
         }
@@ -97,7 +97,7 @@ class SandboxSectionsController {
             Section.builder()
                     .id('long')
                     .title('latest long reads')
-                    .type('investigation')
+                    .type('expandable')
                     .firstChunk(longSectionService.fetchChunkById('0:0'))
                     .build()
         }
