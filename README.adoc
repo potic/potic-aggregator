@@ -21,4 +21,4 @@ link:src/main/scripts/deploy[HOWTO: start service as docker container, window="_
 
 link:src/docs/configuration-parameters.adoc[Service configuration parameters]
 
-link:docs/environments.adoc[Environments]
+link:src/docs/environments.adoc[Environments]
