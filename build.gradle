@@ -47,7 +47,4 @@ jacocoTestReport {
 }
 
 apply plugin: 'application'
-
-bootRepackage {
-    mainClass = 'com.github.pocketsquare.articles.Application'
-}
+mainClass = 'com.github.pocketsquare.articles.Application'
