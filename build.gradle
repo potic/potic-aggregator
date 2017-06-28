@@ -47,4 +47,4 @@ jacocoTestReport {
 }
 
 apply plugin: 'application'
-mainClassName = 'com.github.pocketsquare.articles.Application'
+mainClassName = 'me.potic.aggregator.Application'
