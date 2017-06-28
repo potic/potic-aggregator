@@ -11,6 +11,3 @@ out/
 # Gradle #
 build/
 .gradle/
-
-# Deployment #
-/.travis/id_rsa

@@ -1,7 +1,7 @@
 plugins {
-    id 'com.gradle.build-scan' version '1.6'
+    id 'com.gradle.build-scan' version '1.7.4'
 
-    id 'org.springframework.boot' version '1.5.2.RELEASE'
+    id 'org.springframework.boot' version '1.5.4.RELEASE'
 
     id 'jacoco'
 }
@@ -12,7 +12,7 @@ apply plugin: 'idea'
 version = '0.1-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.0'
 }
 
 repositories {
@@ -47,7 +47,4 @@ jacocoTestReport {
 }
 
 apply plugin: 'application'
-
-bootRepackage {
-    mainClass = 'com.github.pocketsquare.articles.Application'
-}
+mainClassName = 'com.github.pocketsquare.articles.Application'
