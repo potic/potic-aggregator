@@ -9,5 +9,6 @@ RUN unzip /usr/src/potic-aggregator/potic-aggregator-*.zip -d /usr/app/ && ln -s
 WORKDIR /usr/app/potic-aggregator
 
 EXPOSE 8080
-ENTRYPOINT ["./bin/potic-aggregator"]
+ENV ENVIRONMENT_NAME test
+ENTRYPOINT [ "sh", "-c", "./bin/potic-aggregator --spring.profiles.active=$ENVIRONMENT_NAME" ]
 CMD []
