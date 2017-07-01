@@ -25,7 +25,6 @@ class SandboxChunksController {
     @Autowired
     LongSectionService longSectionService
 
-    @CrossOrigin
     @GetMapping(path = '/sandbox/section/latest/{chunkId}')
     @ResponseBody SectionChunk latestSectionChunkById(@PathVariable String chunkId) {
         timedService.timed "/sandbox/section/latest/${chunkId} request", {
@@ -33,7 +32,6 @@ class SandboxChunksController {
         }
     }
 
-    @CrossOrigin
     @GetMapping(path = '/sandbox/section/random/{chunkId}')
     @ResponseBody SectionChunk randomArticlesSection(@PathVariable String chunkId) {
         timedService.timed "/sandbox/section/random/${chunkId} request", {
@@ -41,7 +39,6 @@ class SandboxChunksController {
         }
     }
 
-    @CrossOrigin
     @GetMapping(path = '/sandbox/section/short/{chunkId}')
     @ResponseBody SectionChunk shortArticlesSection(@PathVariable String chunkId) {
         timedService.timed "/sandbox/section/short/${chunkId} request", {
@@ -49,7 +46,6 @@ class SandboxChunksController {
         }
     }
 
-    @CrossOrigin
     @GetMapping(path = '/sandbox/section/long/{chunkId}')
     @ResponseBody SectionChunk longArticlesSection(@PathVariable String chunkId) {
         timedService.timed "/sandbox/section/long/${chunkId} request", {

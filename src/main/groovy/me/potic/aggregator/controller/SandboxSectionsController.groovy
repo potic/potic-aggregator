@@ -5,7 +5,6 @@ import groovyx.gpars.dataflow.Promise
 import me.potic.aggregator.domain.Section
 import me.potic.aggregator.service.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
@@ -31,7 +30,6 @@ class SandboxSectionsController {
     @Autowired
     LongSectionService longSectionService
 
-    @CrossOrigin
     @GetMapping(path = '/sandbox/section')
     @ResponseBody List<Section> sandboxSections() {
         timedService.timed '/sandbox/section request', {
@@ -51,7 +49,6 @@ class SandboxSectionsController {
         }
     }
 
-    @CrossOrigin
     @GetMapping(path = '/sandbox/section/latest')
     @ResponseBody Section latestArticlesSection() {
         timedService.timed "/sandbox/section/latest request", {
@@ -64,7 +61,6 @@ class SandboxSectionsController {
         }
     }
 
-    @CrossOrigin
     @GetMapping(path = '/sandbox/section/random')
     @ResponseBody Section randomArticlesSection() {
         timedService.timed "/sandbox/section/random request", {
@@ -77,7 +73,6 @@ class SandboxSectionsController {
         }
     }
 
-    @CrossOrigin
     @GetMapping(path = '/sandbox/section/short')
     @ResponseBody Section shortArticlesSection() {
         timedService.timed "  /sandbox/section/short request", {
@@ -90,7 +85,6 @@ class SandboxSectionsController {
         }
     }
 
-    @CrossOrigin
     @GetMapping(path = '/sandbox/section/long')
     @ResponseBody Section longArticlesSection() {
         timedService.timed "  /sandbox/section/long request", {
