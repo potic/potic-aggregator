@@ -51,6 +51,7 @@ class SandboxSectionsController {
         }
     }
 
+    @CrossOrigin
     @GetMapping(path = '/sandbox/section/latest')
     @ResponseBody Section latestArticlesSection() {
         timedService.timed "/sandbox/section/latest request", {
@@ -63,6 +64,7 @@ class SandboxSectionsController {
         }
     }
 
+    @CrossOrigin
     @GetMapping(path = '/sandbox/section/random')
     @ResponseBody Section randomArticlesSection() {
         timedService.timed "/sandbox/section/random request", {
@@ -75,6 +77,7 @@ class SandboxSectionsController {
         }
     }
 
+    @CrossOrigin
     @GetMapping(path = '/sandbox/section/short')
     @ResponseBody Section shortArticlesSection() {
         timedService.timed "  /sandbox/section/short request", {
@@ -87,6 +90,7 @@ class SandboxSectionsController {
         }
     }
 
+    @CrossOrigin
     @GetMapping(path = '/sandbox/section/long')
     @ResponseBody Section longArticlesSection() {
         timedService.timed "  /sandbox/section/long request", {
