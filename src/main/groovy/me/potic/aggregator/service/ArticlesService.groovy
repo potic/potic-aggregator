@@ -10,16 +10,14 @@ import org.springframework.stereotype.Service
 @Slf4j
 class ArticlesService {
 
-    static final String SANDBOX_USER_ID = '58b1800dc9e77c0001d1d702'
-
     @Autowired
     HttpBuilder articlesRest
 
-    List<Article> unreadForSandboxUser(int page, int size) {
+    List<Article> retrieveUnreadArticlesOfUser(String userId, int page, int size) {
         log.info "requesting $size articles from page #$page"
 
         articlesRest.get {
-            request.uri.path = "/article/byUserId/${SANDBOX_USER_ID}/unread"
+            request.uri.path = "/article/byUserId/${userId}/unread"
             request.uri.query = [ page: page, size: size ]
         }
     }

@@ -1,6 +1,7 @@
 package me.potic.aggregator.service
 
 import groovy.util.logging.Slf4j
+import me.potic.aggregator.domain.Section
 import me.potic.aggregator.domain.SectionChunk
 import org.apache.commons.lang3.RandomUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +18,16 @@ class RandomSectionService {
     @Autowired
     ArticlesService articlesService
 
-    SectionChunk fetchChunkById() {
+    Section fetchSectionHead(String userId) {
+        Section.builder()
+                .id('random')
+                .title('random articles')
+                .type('fixed')
+                .firstChunk(fetchChunkById(userId))
+                .build()
+    }
+
+    SectionChunk fetchChunkById(String userId) {
         Set randomIndexes = []
 
         while (randomIndexes.size() < SECTION_SIZE) {
@@ -26,7 +36,7 @@ class RandomSectionService {
 
         withPool {
             List randomArticles = randomIndexes.collectParallel { Integer randomIndex ->
-                articlesService.unreadForSandboxUser(randomIndex, 1).first()
+                articlesService.retrieveUnreadArticlesOfUser(userId, randomIndex, 1).first()
             }
 
             SectionChunk.builder().id('0').articles(randomArticles).nextChunkId('0').build()
