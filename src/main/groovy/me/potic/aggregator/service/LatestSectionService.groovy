@@ -1,6 +1,7 @@
 package me.potic.aggregator.service
 
 import groovy.util.logging.Slf4j
+import me.potic.aggregator.domain.Section
 import me.potic.aggregator.domain.SectionChunk
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -14,11 +15,20 @@ class LatestSectionService {
     @Autowired
     ArticlesService articlesService
 
-    SectionChunk fetchChunkById(String id) {
-        Integer page = Integer.parseInt(id)
+    Section fetchSectionHead(String userId) {
+        Section.builder()
+                .id('latest')
+                .title('latest articles')
+                .type('expandable')
+                .firstChunk(fetchChunkById(userId, '0'))
+                .build()
+    }
 
-        List latestArticles = articlesService.unreadForSandboxUser(page, SECTION_SIZE)
+    SectionChunk fetchChunkById(String userId, String chunkId) {
+        Integer page = Integer.parseInt(chunkId)
 
-        SectionChunk.builder().id(id).articles(latestArticles).nextChunkId("${page + 1}").build()
+        List latestArticles = articlesService.retrieveUnreadArticlesOfUser(userId, page, SECTION_SIZE)
+
+        SectionChunk.builder().id(chunkId).articles(latestArticles).nextChunkId("${page + 1}").build()
     }
 }

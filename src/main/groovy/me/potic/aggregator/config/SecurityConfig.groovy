@@ -28,7 +28,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .forRS256(apiAudience, issuer)
                 .configure(http)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, '/sandbox/**').hasAuthority("get:sections")
+                .antMatchers(HttpMethod.GET, '/user/me/section/**').hasAuthority("get:sections")
                 .anyRequest().authenticated()
                 .and().cors()
     }
@@ -41,7 +41,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowCredentials(true)
         configuration.setAllowedHeaders( [ 'Authorization', 'Cache-Control', 'Content-Type' ])
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration('/sandbox/**', configuration)
+        source.registerCorsConfiguration('/user/me/section/**', configuration)
 
         source
     }

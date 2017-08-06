@@ -19,4 +19,11 @@ class Application {
             request.uri = articlesServiceUrl
         }
     }
+
+    @Bean
+    HttpBuilder auth0Rest(@Value('${services.auth0.url}') String auth0ServiceUrl) {
+        HttpBuilder.configure {
+            request.uri = auth0ServiceUrl
+        }
+    }
 }
