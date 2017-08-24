@@ -13,12 +13,12 @@ class ArticlesService {
     @Autowired
     HttpBuilder articlesRest
 
-    List<Article> retrieveUnreadArticlesOfUser(String userId, int page, int size) {
-        log.info "requesting $size articles from page #$page"
+    List<Article> retrieveUnreadArticlesOfUser(String userId, int offset, int limit) {
+        log.info "requesting $limit articles with offset #$offset"
 
         articlesRest.get {
             request.uri.path = "/article/byUserId/${userId}/unread"
-            request.uri.query = [ page: page, size: size ]
+            request.uri.query = [ offset: offset, limit: limit ]
         }
     }
 }
