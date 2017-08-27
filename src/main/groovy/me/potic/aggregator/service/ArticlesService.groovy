@@ -16,27 +16,42 @@ class ArticlesService {
     List<Article> retrieveUnreadArticlesOfUser(String userId, String cursorId, int count) {
         log.info "requesting $count articles from cursor $cursorId for user $userId"
 
+        def query = [ count: count ]
+        if (cursorId != null) {
+            query['cursorId'] = cursorId
+        }
+
         articlesRest.get {
             request.uri.path = "/article/byUserId/${userId}/unread"
-            request.uri.query = [ cursorId: cursorId, count: count ]
+            request.uri.query = query
         }
     }
 
     List<Article> retrieveUnreadLongArticlesOfUser(String userId, Integer minLength, String cursorId, int count) {
         log.info "requesting $count articles longer than $minLength from cursor $cursorId for user $userId"
 
+        def query = [ count: count, minLength: minLength ]
+        if (cursorId != null) {
+            query['cursorId'] = cursorId
+        }
+
         articlesRest.get {
             request.uri.path = "/article/byUserId/${userId}/unread"
-            request.uri.query = [ cursorId: cursorId, count: count, minLength: minLength ]
+            request.uri.query = query
         }
     }
 
     List<Article> retrieveUnreadShortArticlesOfUser(String userId, Integer maxLength, String cursorId, int count) {
         log.info "requesting $count articles longer than $maxLength from cursor $cursorId for user $userId"
 
+        def query = [ count: count, maxLength: maxLength ]
+        if (cursorId != null) {
+            query['cursorId'] = cursorId
+        }
+
         articlesRest.get {
             request.uri.path = "/article/byUserId/${userId}/unread"
-            request.uri.query = [ cursorId: cursorId, count: count, maxLength: maxLength ]
+            request.uri.query = query
         }
     }
 }
