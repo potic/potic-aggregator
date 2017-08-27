@@ -28,8 +28,8 @@ class ChunksController {
     UserService userService
 
     @CrossOrigin
-    @GetMapping(path = '/user/me/section/latest?cursorId={cursorId}&count={count}')
-    @ResponseBody SectionChunk latestSectionChunkById(@PathVariable(required = false) String cursorId, @PathVariable Integer count, final Principal principal) {
+    @GetMapping(path = '/user/me/section/latest')
+    @ResponseBody SectionChunk latestSectionChunkById(@RequestParam(value = 'cursorId', required = false) String cursorId, @RequestParam(value = 'count') Integer count, final Principal principal) {
         timedService.timed "/user/me/section/latest?cursorId=${cursorId}&count=${count} request", {
             String pocketSquareId = userService.fetchPocketSquareIdByAuth0Token(principal.token)
 
@@ -38,8 +38,8 @@ class ChunksController {
     }
 
     @CrossOrigin
-    @GetMapping(path = '/user/me/section/short?cursorId={cursorId}&count={count}')
-    @ResponseBody SectionChunk shortArticlesSection(@PathVariable(required = false) String cursorId, @PathVariable Integer count, final Principal principal) {
+    @GetMapping(path = '/user/me/section/short')
+    @ResponseBody SectionChunk shortArticlesSection(@RequestParam(value = 'cursorId', required = false) String cursorId, @RequestParam(value = 'count') Integer count, final Principal principal) {
         timedService.timed "/user/me/section/section/short?cursorId=${cursorId}&count=${count} request", {
             String pocketSquareId = userService.fetchPocketSquareIdByAuth0Token(principal.token)
 
@@ -48,8 +48,8 @@ class ChunksController {
     }
 
     @CrossOrigin
-    @GetMapping(path = '/user/me/section/long?cursorId={cursorId}&count={count}')
-    @ResponseBody SectionChunk longArticlesSection(@PathVariable(required = false) String cursorId, @PathVariable Integer count, final Principal principal) {
+    @GetMapping(path = '/user/me/section/long')
+    @ResponseBody SectionChunk longArticlesSection(@RequestParam(value = 'cursorId', required = false) String cursorId, @RequestParam(value = 'count') Integer count, final Principal principal) {
         timedService.timed "/user/me/section/section/long?cursorId=${cursorId}&count=${count} request", {
             String pocketSquareId = userService.fetchPocketSquareIdByAuth0Token(principal.token)
 
