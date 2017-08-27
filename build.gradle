@@ -13,7 +13,7 @@ plugins {
 version = '0.1-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.0.2'
+    gradleVersion = '4.1'
 }
 
 repositories {
@@ -41,8 +41,6 @@ dependencies {
 buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service'
     licenseAgree = 'yes'
-
-    publishAlways()
 }
 
 jacocoTestReport {

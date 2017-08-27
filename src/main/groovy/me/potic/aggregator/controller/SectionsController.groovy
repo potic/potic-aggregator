@@ -25,9 +25,6 @@ class SectionsController {
     LatestSectionService latestSectionService
 
     @Autowired
-    RandomSectionService randomSectionService
-
-    @Autowired
     ShortSectionService shortSectionService
 
     @Autowired
@@ -45,7 +42,6 @@ class SectionsController {
             withPool {
                 executeAsync(
                         { latestSectionService.fetchSectionHead(pocketSquareId) },
-                        { randomSectionService.fetchSectionHead(pocketSquareId) },
                         { shortSectionService.fetchSectionHead(pocketSquareId) },
                         { longSectionService.fetchSectionHead(pocketSquareId) }
                 ).collect { promiseOnSection -> promiseOnSection.get() }
@@ -60,16 +56,6 @@ class SectionsController {
             String pocketSquareId = userService.fetchPocketSquareIdByAuth0Token(principal.token)
 
             latestSectionService.fetchSectionHead(pocketSquareId)
-        }
-    }
-
-    @CrossOrigin
-    @GetMapping(path = '/user/me/section/random')
-    @ResponseBody Section randomArticlesSection(final Principal principal) {
-        timedService.timed "/user/me/section/section/random request", {
-            String pocketSquareId = userService.fetchPocketSquareIdByAuth0Token(principal.token)
-
-            randomSectionService.fetchSectionHead(pocketSquareId)
         }
     }
 
