@@ -48,34 +48,4 @@ class SectionsController {
             }
         }
     }
-
-    @CrossOrigin
-    @GetMapping(path = '/user/me/section/latest')
-    @ResponseBody Section latestArticlesSection(final Principal principal) {
-        timedService.timed "/user/me/section/section/latest request", {
-            String pocketSquareId = userService.fetchPocketSquareIdByAuth0Token(principal.token)
-
-            latestSectionService.fetchSectionHead(pocketSquareId)
-        }
-    }
-
-    @CrossOrigin
-    @GetMapping(path = '/user/me/section/short')
-    @ResponseBody Section shortArticlesSection(final Principal principal) {
-        timedService.timed "  /user/me/section/section/short request", {
-            String pocketSquareId = userService.fetchPocketSquareIdByAuth0Token(principal.token)
-
-            shortSectionService.fetchSectionHead(pocketSquareId)
-        }
-    }
-
-    @CrossOrigin
-    @GetMapping(path = '/user/me/section/long')
-    @ResponseBody Section longArticlesSection(final Principal principal) {
-        timedService.timed "  /user/me/section/section/long request", {
-            String pocketSquareId = userService.fetchPocketSquareIdByAuth0Token(principal.token)
-
-            longSectionService.fetchSectionHead(pocketSquareId)
-        }
-    }
 }
