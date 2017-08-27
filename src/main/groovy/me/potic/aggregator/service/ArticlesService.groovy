@@ -13,12 +13,30 @@ class ArticlesService {
     @Autowired
     HttpBuilder articlesRest
 
-    List<Article> retrieveUnreadArticlesOfUser(String userId, int offset, int limit) {
-        log.info "requesting $limit articles with offset #$offset"
+    List<Article> retrieveUnreadArticlesOfUser(String userId, String cursorId, int count) {
+        log.info "requesting $count articles from cursor $cursorId for user $userId"
 
         articlesRest.get {
             request.uri.path = "/article/byUserId/${userId}/unread"
-            request.uri.query = [ offset: offset, limit: limit ]
+            request.uri.query = [ cursorId: cursorId, count: count ]
+        }
+    }
+
+    List<Article> retrieveUnreadLongArticlesOfUser(String userId, Integer minLength, String cursorId, int count) {
+        log.info "requesting $count articles longer than $minLength from cursor $cursorId for user $userId"
+
+        articlesRest.get {
+            request.uri.path = "/article/byUserId/${userId}/unread"
+            request.uri.query = [ cursorId: cursorId, count: count, minLength: minLength ]
+        }
+    }
+
+    List<Article> retrieveUnreadShortArticlesOfUser(String userId, Integer maxLength, String cursorId, int count) {
+        log.info "requesting $count articles longer than $maxLength from cursor $cursorId for user $userId"
+
+        articlesRest.get {
+            request.uri.path = "/article/byUserId/${userId}/unread"
+            request.uri.query = [ cursorId: cursorId, count: count, maxLength: maxLength ]
         }
     }
 }

@@ -20,15 +20,13 @@ class LatestSectionService {
                 .id('latest')
                 .title('latest articles')
                 .type('expandable')
-                .firstChunk(fetchChunkById(userId, '0'))
+                .firstChunk(fetchChunk(userId, null, SECTION_SIZE))
                 .build()
     }
 
-    SectionChunk fetchChunkById(String userId, String chunkId) {
-        Integer page = Integer.parseInt(chunkId)
+    SectionChunk fetchChunk(String userId, String cursorId, int count) {
+        List latestArticles = articlesService.retrieveUnreadArticlesOfUser(userId, cursorId, count)
 
-        List latestArticles = articlesService.retrieveUnreadArticlesOfUser(userId, page, SECTION_SIZE)
-
-        SectionChunk.builder().id(chunkId).articles(latestArticles).nextChunkId("${page + 1}").build()
+        SectionChunk.builder().articles(latestArticles).nextCursorId(latestArticles.last().id).build()
     }
 }

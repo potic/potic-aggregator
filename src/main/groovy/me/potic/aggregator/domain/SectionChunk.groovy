@@ -5,9 +5,7 @@ import groovy.transform.builder.Builder
 @Builder
 class SectionChunk {
 
-    String id
-
     List<Article> articles
 
-    String nextChunkId
+    String nextCursorId
 }
