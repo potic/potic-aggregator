@@ -13,8 +13,8 @@ class ArticlesService {
     @Autowired
     HttpBuilder articlesRest
 
-    List<Article> retrieveUnreadArticlesOfUser(String userId, String cursorId, int count) {
-        log.info "requesting $count articles from cursor $cursorId for user $userId"
+    List<Article> retrieveUnreadArticlesOfUser(String accessToken, String cursorId, int count) {
+        log.info "requesting $count articles from cursor $cursorId"
 
         def query = [ count: count ]
         if (cursorId != null) {
@@ -22,13 +22,15 @@ class ArticlesService {
         }
 
         articlesRest.get {
-            request.uri.path = "/article/byUserId/${userId}/unread"
+            request.headers['Authorization'] = "Bearer $accessToken".toString()
+
+            request.uri.path = '/user/me/article/unread'
             request.uri.query = query
         }
     }
 
-    List<Article> retrieveUnreadLongArticlesOfUser(String userId, Integer minLength, String cursorId, int count) {
-        log.info "requesting $count articles longer than $minLength from cursor $cursorId for user $userId"
+    List<Article> retrieveUnreadLongArticlesOfUser(String accessToken, Integer minLength, String cursorId, int count) {
+        log.info "requesting $count articles longer than $minLength from cursor $cursorId"
 
         def query = [ count: count, minLength: minLength ]
         if (cursorId != null) {
@@ -36,13 +38,15 @@ class ArticlesService {
         }
 
         articlesRest.get {
-            request.uri.path = "/article/byUserId/${userId}/unread"
+            request.headers['Authorization'] = "Bearer $accessToken".toString()
+
+            request.uri.path = '/user/me/article/unread'
             request.uri.query = query
         }
     }
 
-    List<Article> retrieveUnreadShortArticlesOfUser(String userId, Integer maxLength, String cursorId, int count) {
-        log.info "requesting $count articles longer than $maxLength from cursor $cursorId for user $userId"
+    List<Article> retrieveUnreadShortArticlesOfUser(String accessToken, Integer maxLength, String cursorId, int count) {
+        log.info "requesting $count articles longer than $maxLength from cursor $cursorId"
 
         def query = [ count: count, maxLength: maxLength ]
         if (cursorId != null) {
@@ -50,7 +54,9 @@ class ArticlesService {
         }
 
         articlesRest.get {
-            request.uri.path = "/article/byUserId/${userId}/unread"
+            request.headers['Authorization'] = "Bearer $accessToken".toString()
+
+            request.uri.path = '/user/me/article/unread'
             request.uri.query = query
         }
     }

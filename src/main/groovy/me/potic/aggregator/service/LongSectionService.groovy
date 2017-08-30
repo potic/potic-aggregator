@@ -17,17 +17,17 @@ class LongSectionService {
     @Autowired
     ArticlesService articlesService
 
-    Section fetchSectionHead(String userId) {
+    Section fetchSectionHead(String accessToken) {
         Section.builder()
                 .id('long')
                 .title('latest long reads')
                 .type('expandable')
-                .firstChunk(fetchChunk(userId, null, SECTION_SIZE))
+                .firstChunk(fetchChunk(accessToken, null, SECTION_SIZE))
                 .build()
     }
 
-    SectionChunk fetchChunk(String userId, String cursorId, int count) {
-        List longArticles = articlesService.retrieveUnreadLongArticlesOfUser(userId, LONGREAD_THRESHOLD, cursorId, count)
+    SectionChunk fetchChunk(String accessToken, String cursorId, int count) {
+        List longArticles = articlesService.retrieveUnreadLongArticlesOfUser(accessToken, LONGREAD_THRESHOLD, cursorId, count)
 
         SectionChunk.builder().articles(longArticles).nextCursorId(longArticles.last().id).build()
     }

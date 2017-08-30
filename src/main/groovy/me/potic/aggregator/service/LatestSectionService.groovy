@@ -15,17 +15,17 @@ class LatestSectionService {
     @Autowired
     ArticlesService articlesService
 
-    Section fetchSectionHead(String userId) {
+    Section fetchSectionHead(String accessToken) {
         Section.builder()
                 .id('latest')
                 .title('latest articles')
                 .type('expandable')
-                .firstChunk(fetchChunk(userId, null, SECTION_SIZE))
+                .firstChunk(fetchChunk(accessToken, null, SECTION_SIZE))
                 .build()
     }
 
-    SectionChunk fetchChunk(String userId, String cursorId, int count) {
-        List latestArticles = articlesService.retrieveUnreadArticlesOfUser(userId, cursorId, count)
+    SectionChunk fetchChunk(String accessToken, String cursorId, int count) {
+        List latestArticles = articlesService.retrieveUnreadArticlesOfUser(accessToken, cursorId, count)
 
         SectionChunk.builder().articles(latestArticles).nextCursorId(latestArticles.last().id).build()
     }

@@ -37,13 +37,11 @@ class SectionsController {
     @GetMapping(path = '/user/me/section')
     @ResponseBody List<Section> userSections(final Principal principal) {
         timedService.timed '/user/me/section request', {
-            String pocketSquareId = userService.fetchPocketSquareIdByAuth0Token(principal.token)
-
             withPool {
                 executeAsync(
-                        { latestSectionService.fetchSectionHead(pocketSquareId) },
-                        { shortSectionService.fetchSectionHead(pocketSquareId) },
-                        { longSectionService.fetchSectionHead(pocketSquareId) }
+                        { latestSectionService.fetchSectionHead(principal.token) },
+                        { shortSectionService.fetchSectionHead(principal.token) },
+                        { longSectionService.fetchSectionHead(principal.token) }
                 ).collect { promiseOnSection -> promiseOnSection.get() }
             }
         }

@@ -28,7 +28,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .forRS256(apiAudience, issuer)
                 .configure(http)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, '/user/me/section/**').hasAuthority("get:sections")
+                .antMatchers(HttpMethod.GET, '/user/me/section/**').hasAuthority('get:articles')
                 .anyRequest().authenticated()
                 .and().cors()
     }
