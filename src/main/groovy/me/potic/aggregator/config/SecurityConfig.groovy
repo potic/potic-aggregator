@@ -29,7 +29,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .configure(http)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, '/user/me/section/**').hasAuthority('get:articles')
-                .anyRequest().authenticated()
+                .antMatchers(HttpMethod.GET, '/user/me/section/**').authenticated()
                 .and().cors()
     }
 
