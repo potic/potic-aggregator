@@ -31,7 +31,7 @@ dependencies {
 
     compile 'org.codehaus.gpars:gpars:1.2.1'
 
-    compile 'io.github.http-builder-ng:http-builder-ng-core:0.16.1'
+    compile 'io.github.http-builder-ng:http-builder-ng-core:0.17.0'
 
     compile 'org.slf4j:slf4j-api'
     compile 'ch.qos.logback:logback-classic'
