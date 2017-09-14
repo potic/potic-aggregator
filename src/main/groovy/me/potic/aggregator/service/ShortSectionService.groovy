@@ -2,6 +2,7 @@ package me.potic.aggregator.service
 
 import com.codahale.metrics.MetricRegistry
 import com.codahale.metrics.Timer
+import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import me.potic.aggregator.domain.Section
 import me.potic.aggregator.domain.SectionChunk
@@ -42,13 +43,9 @@ class ShortSectionService {
                 .build()
     }
 
+    @Timed(name = 'fetchChunk')
     SectionChunk fetchChunk(String accessToken, String cursorId, int count) {
-        final Timer.Context timerContext = fetchChunkTimer.time()
-        try {
-            List shortArticles = articlesService.retrieveUnreadShortArticlesOfUser(accessToken, LONGREAD_THRESHOLD, cursorId, count)
-            return SectionChunk.builder().articles(shortArticles).nextCursorId(shortArticles.last().id).build()
-        } finally {
-            timerContext.stop()
-        }
+        List shortArticles = articlesService.retrieveUnreadShortArticlesOfUser(accessToken, LONGREAD_THRESHOLD, cursorId, count)
+        return SectionChunk.builder().articles(shortArticles).nextCursorId(shortArticles.last().id).build()
     }
 }

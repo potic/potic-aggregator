@@ -1,16 +1,11 @@
 package me.potic.aggregator.service
 
-import com.codahale.metrics.MetricRegistry
-import com.codahale.metrics.Timer
+import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import me.potic.aggregator.domain.Section
 import me.potic.aggregator.domain.SectionChunk
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-
-import javax.annotation.PostConstruct
-
-import static com.codahale.metrics.MetricRegistry.name
 
 @Service
 @Slf4j
@@ -23,16 +18,6 @@ class LongSectionService {
     @Autowired
     ArticlesService articlesService
 
-    @Autowired
-    MetricRegistry metricRegistry
-
-    Timer fetchChunkTimer
-
-    @PostConstruct
-    void initMetrics() {
-        fetchChunkTimer = metricRegistry.timer(name('service', 'longSection', 'fetchChunk'))
-    }
-
     Section fetchSectionHead(String accessToken) {
         Section.builder()
                 .id('long')
@@ -42,13 +27,9 @@ class LongSectionService {
                 .build()
     }
 
+    @Timed(name = 'fetchChunk')
     SectionChunk fetchChunk(String accessToken, String cursorId, int count) {
-        final Timer.Context timerContext = fetchChunkTimer.time()
-        try {
-            List longArticles = articlesService.retrieveUnreadLongArticlesOfUser(accessToken, LONGREAD_THRESHOLD, cursorId, count)
-            return SectionChunk.builder().articles(longArticles).nextCursorId(longArticles.last().id).build()
-        } finally {
-            timerContext.stop()
-        }
+        List longArticles = articlesService.retrieveUnreadLongArticlesOfUser(accessToken, LONGREAD_THRESHOLD, cursorId, count)
+        return SectionChunk.builder().articles(longArticles).nextCursorId(longArticles.last().id).build()
     }
 }

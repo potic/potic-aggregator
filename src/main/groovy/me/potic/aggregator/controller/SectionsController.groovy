@@ -1,20 +1,19 @@
 package me.potic.aggregator.controller
 
-import com.codahale.metrics.MetricRegistry
-import com.codahale.metrics.Timer
+import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import me.potic.aggregator.domain.Section
-import me.potic.aggregator.service.*
+import me.potic.aggregator.service.LatestSectionService
+import me.potic.aggregator.service.LongSectionService
+import me.potic.aggregator.service.ShortSectionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
-import javax.annotation.PostConstruct
 import java.security.Principal
 
-import static com.codahale.metrics.MetricRegistry.name
 import static groovyx.gpars.GParsPool.executeAsync
 import static groovyx.gpars.GParsPool.withPool
 
@@ -31,21 +30,12 @@ class SectionsController {
     @Autowired
     LongSectionService longSectionService
 
-    @Autowired
-    MetricRegistry metricRegistry
-
-    Timer userSectionsTimer
-
-    @PostConstruct
-    void initMetrics() {
-        userSectionsTimer = metricRegistry.timer(name('request', 'user', 'me', 'section'))
-    }
-
+    @Timed(name = 'user.me.section')
     @CrossOrigin
     @GetMapping(path = '/user/me/section')
     @ResponseBody List<Section> userSections(final Principal principal) {
-        final Timer.Context timerContext = userSectionsTimer.time()
         log.info "receive request for /user/me/section"
+
         try {
             return withPool {
                 executeAsync(
@@ -54,9 +44,9 @@ class SectionsController {
                         { longSectionService.fetchSectionHead(principal.token) }
                 ).collect { promiseOnSection -> promiseOnSection.get() }
             }
-        } finally {
-            long time = timerContext.stop()
-            log.info "request for /user/me/section took ${time / 1_000_000}ms"
+        } catch (e) {
+            log.error "request for /user/me/section failed: $e.message", e
+            throw new RuntimeException("request for /user/me/section failed: $e.message", e)
         }
     }
 }
