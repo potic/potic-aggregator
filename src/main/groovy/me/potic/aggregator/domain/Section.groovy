@@ -9,7 +9,5 @@ class Section {
 
     String title
 
-    String type
-
     SectionChunk firstChunk
 }

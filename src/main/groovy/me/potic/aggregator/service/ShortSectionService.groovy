@@ -1,17 +1,11 @@
 package me.potic.aggregator.service
 
-import com.codahale.metrics.MetricRegistry
-import com.codahale.metrics.Timer
 import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import me.potic.aggregator.domain.Section
 import me.potic.aggregator.domain.SectionChunk
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-
-import javax.annotation.PostConstruct
-
-import static com.codahale.metrics.MetricRegistry.name
 
 @Service
 @Slf4j
@@ -22,30 +16,19 @@ class ShortSectionService {
     static final Integer LONGREAD_THRESHOLD = 500
 
     @Autowired
-    ArticlesService articlesService
-
-    @Autowired
-    MetricRegistry metricRegistry
-
-    Timer fetchChunkTimer
-
-    @PostConstruct
-    void initMetrics() {
-        fetchChunkTimer = metricRegistry.timer(name('service', 'shortSection', 'fetchChunk'))
-    }
+    BasicCardsService basicCardsService
 
     Section fetchSectionHead(String accessToken) {
         Section.builder()
                 .id('short')
                 .title('latest short articles')
-                .type('expandable')
                 .firstChunk(fetchChunk(accessToken, null, SECTION_SIZE))
                 .build()
     }
 
     @Timed(name = 'fetchChunk')
     SectionChunk fetchChunk(String accessToken, String cursorId, int count) {
-        List shortArticles = articlesService.retrieveUnreadShortArticlesOfUser(accessToken, LONGREAD_THRESHOLD, cursorId, count)
-        return SectionChunk.builder().articles(shortArticles).nextCursorId(shortArticles.last().id).build()
+        List shortCards = basicCardsService.getUserCards(accessToken, cursorId, count, null, LONGREAD_THRESHOLD)
+        return SectionChunk.builder().cards(shortCards).nextCursorId(shortCards.last().id).build()
     }
 }

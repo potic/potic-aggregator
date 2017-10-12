@@ -14,20 +14,19 @@ class LatestSectionService {
     static final Integer SECTION_SIZE = 5
 
     @Autowired
-    ArticlesService articlesService
+    BasicCardsService basicCardsService
 
     Section fetchSectionHead(String accessToken) {
         Section.builder()
                 .id('latest')
                 .title('latest articles')
-                .type('expandable')
                 .firstChunk(fetchChunk(accessToken, null, SECTION_SIZE))
                 .build()
     }
 
     @Timed(name = 'fetchChunk')
     SectionChunk fetchChunk(String accessToken, String cursorId, int count) {
-        List latestArticles = articlesService.retrieveUnreadArticlesOfUser(accessToken, cursorId, count)
-        return SectionChunk.builder().articles(latestArticles).nextCursorId(latestArticles.last().id).build()
+        List latestCards = basicCardsService.getUserCards(accessToken, cursorId, count, null, null)
+        return SectionChunk.builder().cards(latestCards).nextCursorId(latestCards.last().id).build()
     }
 }

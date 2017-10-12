@@ -16,20 +16,19 @@ class LongSectionService {
     static final Integer LONGREAD_THRESHOLD = 500
 
     @Autowired
-    ArticlesService articlesService
+    BasicCardsService basicCardsService
 
     Section fetchSectionHead(String accessToken) {
         Section.builder()
                 .id('long')
                 .title('latest long reads')
-                .type('expandable')
                 .firstChunk(fetchChunk(accessToken, null, SECTION_SIZE))
                 .build()
     }
 
     @Timed(name = 'fetchChunk')
     SectionChunk fetchChunk(String accessToken, String cursorId, int count) {
-        List longArticles = articlesService.retrieveUnreadLongArticlesOfUser(accessToken, LONGREAD_THRESHOLD, cursorId, count)
-        return SectionChunk.builder().articles(longArticles).nextCursorId(longArticles.last().id).build()
+        List longCards = basicCardsService.getUserCards(accessToken, cursorId, count, LONGREAD_THRESHOLD, null)
+        return SectionChunk.builder().cards(longCards).nextCursorId(longCards.last().id).build()
     }
 }

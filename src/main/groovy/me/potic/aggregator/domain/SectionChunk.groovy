@@ -5,7 +5,7 @@ import groovy.transform.builder.Builder
 @Builder
 class SectionChunk {
 
-    List<Article> articles
+    List<Card> cards
 
     String nextCursorId
 }
