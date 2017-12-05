@@ -1,4 +1,4 @@
-package me.potic.aggregator.config
+package me.potic.sections.config
 
 import com.auth0.spring.security.api.JwtWebSecurityConfigurer
 import org.springframework.beans.factory.annotation.Value

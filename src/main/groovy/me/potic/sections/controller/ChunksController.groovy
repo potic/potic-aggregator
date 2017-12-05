@@ -1,11 +1,11 @@
-package me.potic.aggregator.controller
+package me.potic.sections.controller
 
 import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
-import me.potic.aggregator.domain.SectionChunk
-import me.potic.aggregator.service.LatestSectionService
-import me.potic.aggregator.service.LongSectionService
-import me.potic.aggregator.service.ShortSectionService
+import me.potic.sections.domain.SectionChunk
+import me.potic.sections.service.LatestSectionService
+import me.potic.sections.service.LongSectionService
+import me.potic.sections.service.ShortSectionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 

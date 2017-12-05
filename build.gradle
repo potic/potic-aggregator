@@ -105,4 +105,4 @@ tasks.withType(Test) {
 }
 
 apply plugin: 'application'
-mainClassName = 'me.potic.aggregator.Application'
+mainClassName = 'me.potic.sections.Application'

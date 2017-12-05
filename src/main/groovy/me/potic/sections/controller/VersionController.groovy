@@ -1,4 +1,4 @@
-package me.potic.aggregator.controller
+package me.potic.sections.controller
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody

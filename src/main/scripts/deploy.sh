@@ -15,13 +15,13 @@ warn "Currently running docker images"
 docker ps -a
 
 warn "Killing currently running docker image..."
-docker kill potic-aggregator; docker rm potic-aggregator
+docker kill potic-sections; docker rm potic-sections
 
 warn "Pulling latest docker image..."
-docker pull potic/potic-aggregator:$TAG_TO_DEPLOY
+docker pull potic/potic-sections:$TAG_TO_DEPLOY
 
 warn "Starting docker image..."
-docker run -dit --name potic-aggregator --link potic-basic-cards -e LOG_PATH=/logs -v /logs:/logs -p 40401:8080 potic/potic-aggregator:$TAG_TO_DEPLOY
+docker run -dit --name potic-sections --link potic-basic-cards -e LOG_PATH=/logs -v /logs:/logs -p 40401:8080 potic/potic-sections:$TAG_TO_DEPLOY
 
 warn "Currently running docker images"
 docker ps -a

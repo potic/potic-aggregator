@@ -1,4 +1,4 @@
-package me.potic.aggregator
+package me.potic.sections
 
 import com.codahale.metrics.MetricRegistry
 import com.codahale.metrics.Reporter
@@ -31,7 +31,7 @@ class Application {
     @Bean
     Reporter slf4jMetricsReporter(MetricRegistry metricRegistry) {
         final Slf4jReporter reporter = Slf4jReporter.forRegistry(metricRegistry)
-                .outputTo(LoggerFactory.getLogger('me.potic.aggregator.metrics'))
+                .outputTo(LoggerFactory.getLogger('me.potic.sections.metrics'))
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build()

@@ -1,15 +1,15 @@
-package me.potic.aggregator.service
+package me.potic.sections.service
 
 import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
-import me.potic.aggregator.domain.Section
-import me.potic.aggregator.domain.SectionChunk
+import me.potic.sections.domain.Section
+import me.potic.sections.domain.SectionChunk
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 @Slf4j
-class LongSectionService {
+class ShortSectionService {
 
     static final Integer SECTION_SIZE = 5
 
@@ -20,15 +20,15 @@ class LongSectionService {
 
     Section fetchSectionHead(String accessToken) {
         Section.builder()
-                .id('long')
-                .title('latest long reads')
+                .id('short')
+                .title('latest short articles')
                 .firstChunk(fetchChunk(accessToken, null, SECTION_SIZE))
                 .build()
     }
 
     @Timed(name = 'fetchChunk')
     SectionChunk fetchChunk(String accessToken, String cursorId, int count) {
-        List longCards = basicCardsService.getUserCards(accessToken, cursorId, count, LONGREAD_THRESHOLD, null)
-        return SectionChunk.builder().cards(longCards).nextCursorId(longCards.last().id).build()
+        List shortCards = basicCardsService.getUserCards(accessToken, cursorId, count, null, LONGREAD_THRESHOLD)
+        return SectionChunk.builder().cards(shortCards).nextCursorId(shortCards.last().id).build()
     }
 }

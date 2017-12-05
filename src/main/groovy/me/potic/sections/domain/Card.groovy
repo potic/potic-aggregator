@@ -1,4 +1,4 @@
-package me.potic.aggregator.domain
+package me.potic.sections.domain
 
 class Card {
 

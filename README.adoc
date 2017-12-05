@@ -1,19 +1,19 @@
-= potic-aggregator
+= potic-sections
 :linkattrs:
 
 Service for aggregating sections.
 
 == Travis job
 
-image:https://travis-ci.org/potic/potic-aggregator.svg?branch=develop["Travis job", link="https://travis-ci.org/potic/potic-aggregator"]
+image:https://travis-ci.org/potic/potic-sections.svg?branch=develop["Travis job", link="https://travis-ci.org/potic/potic-sections"]
 
 == Code coverage
 
-image:https://codecov.io/gh/potic/potic-aggregator/branch/develop/graph/badge.svg["Code coverage", link="https://codecov.io/gh/potic/potic-aggregator"]
+image:https://codecov.io/gh/potic/potic-sections/branch/develop/graph/badge.svg["Code coverage", link="https://codecov.io/gh/potic/potic-sections"]
 
 == Docker repository
 
-https://hub.docker.com/r/potic/potic-aggregator/
+https://hub.docker.com/r/potic/potic-sections/
 
 == Documentation
 

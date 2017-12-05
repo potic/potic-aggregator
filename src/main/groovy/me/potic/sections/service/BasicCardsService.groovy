@@ -1,9 +1,9 @@
-package me.potic.aggregator.service
+package me.potic.sections.service
 
 import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpBuilder
-import me.potic.aggregator.domain.Card
+import me.potic.sections.domain.Card
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service

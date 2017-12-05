@@ -11,14 +11,14 @@ appender('STDOUT', ConsoleAppender) {
 }
 
 appender('FILE', RollingFileAppender) {
-    file = "${System.getenv('LOG_PATH') ?: 'logs'}/potic-aggregator.log"
+    file = "${System.getenv('LOG_PATH') ?: 'logs'}/potic-sections.log"
 
     encoder(PatternLayoutEncoder) {
         pattern = '%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
     }
 
     rollingPolicy(TimeBasedRollingPolicy) {
-        FileNamePattern = "${System.getenv('LOG_PATH') ?: 'logs'}/potic-aggregator.%d{yyyy-MM-dd}.log"
+        FileNamePattern = "${System.getenv('LOG_PATH') ?: 'logs'}/potic-sections.%d{yyyy-MM-dd}.log"
     }
 }
 
@@ -26,4 +26,4 @@ String SERVICE_LOG_LEVEL = System.getenv('SERVICE_LOG_LEVEL') ?: 'INFO'
 String ROOT_LOG_LEVEL = System.getenv('ROOT_LOG_LEVEL') ?: 'INFO'
 
 root(Level.toLevel(ROOT_LOG_LEVEL), ['STDOUT', 'FILE' ])
-logger('me.potic.aggregator', Level.toLevel(SERVICE_LOG_LEVEL), [ 'STDOUT', 'FILE' ], false)
+logger('me.potic.sections', Level.toLevel(SERVICE_LOG_LEVEL), [ 'STDOUT', 'FILE' ], false)
