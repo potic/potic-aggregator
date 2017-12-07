@@ -1,0 +1,70 @@
+package me.potic.sections.service
+
+import groovy.util.logging.Slf4j
+import groovyx.net.http.HttpBuilder
+import me.potic.sections.domain.Article
+import me.potic.sections.domain.User
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Service
+
+@Service
+@Slf4j
+class ArticlesService {
+
+    HttpBuilder articlesServiceRest
+
+    @Autowired
+    HttpBuilder articlesServiceRest(@Value('${services.articles.url}') String articlesServiceUrl) {
+        articlesServiceRest = HttpBuilder.configure {
+            request.uri = articlesServiceUrl
+        }
+    }
+
+    List<Article> getLatestUnreadArticles(User user, List<String> skipIds, Integer count) {
+        log.debug "getting $count latest unread articles for user ${user.id} with skipIds=${skipIds}"
+
+        try {
+            String params = "userId: \"${user.id}\""
+            if (skipIds != null) {
+                params += ", skipIds: \"${skipIds}\""
+            }
+            if (count != null) {
+                params += ", count: ${count}"
+            }
+
+            def response = articlesServiceRest.post {
+                request.uri.path = '/graphql'
+                request.contentType = 'application/json'
+                request.body = [ query: """
+                    {
+                      latestUnread(${params}) {
+                        card {
+                            id
+                            pocketId
+                            actual
+                            url
+                            title
+                            source
+                            excerpt
+                            image {
+                                src
+                            }
+                        }
+                      }
+                    }
+                """ ]
+            }
+
+            List errors = response.errors
+            if (errors != null && !errors.empty) {
+                throw new RuntimeException("Request failed: $errors")
+            }
+
+            return response.data.unread.collect({ new Article(it) })
+        } catch (e) {
+            log.error "getting $count latest unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e
+            throw new RuntimeException("getting $count latest unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e)
+        }
+    }
+}
