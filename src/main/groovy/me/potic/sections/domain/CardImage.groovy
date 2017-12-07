@@ -5,21 +5,7 @@ import groovy.transform.ToString
 
 @EqualsAndHashCode
 @ToString(includeNames = true)
-class Card {
+class CardImage {
 
-    String id
-
-    String pocketId
-
-    boolean actual
-
-    String url
-
-    String title
-
-    String source
-
-    String excerpt
-
-    CardImage image
+    String src
 }
