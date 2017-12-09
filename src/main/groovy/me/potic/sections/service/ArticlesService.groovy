@@ -27,7 +27,7 @@ class ArticlesService {
         try {
             String params = "userId: \"${user.id}\""
             if (skipIds != null) {
-                params += ", skipIds: \"${skipIds}\""
+                params += ", skipIds: ${skipIds.collect({ '"' + it + '"' })}"
             }
             if (count != null) {
                 params += ", count: ${count}"
@@ -61,7 +61,7 @@ class ArticlesService {
                 throw new RuntimeException("Request failed: $errors")
             }
 
-            return response.data.unread.collect({ new Article(it) })
+            return response.data.latestUnread.collect({ new Article(it) })
         } catch (e) {
             log.error "getting $count latest unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e
             throw new RuntimeException("getting $count latest unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e)
