@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service
 
 @Service
 @Slf4j
-class LatestSectionFetcher implements SectionFetcher {
+class ShortArticlesSectionFetcher implements SectionFetcher {
 
-    static final Section SECTION = new Section(id: 'latest', title: 'latest articles', priority: 1)
+    static final Section SECTION = new Section(id: 'short', title: 'short articles', priority: 4)
+
+    static final Integer MAX_LENGTH_OF_SHORT_ARTICLE = 300
 
     @Autowired
     ArticlesService articlesService
@@ -25,16 +27,16 @@ class LatestSectionFetcher implements SectionFetcher {
 
     @Override
     List<Card> fetch(User user, Map fetchCardsRequest) {
-        log.debug "fetching cards with latest articles for user ${user} with request ${fetchCardsRequest}"
+        log.debug "fetching cards with short articles for user ${user} with request ${fetchCardsRequest}"
 
         try {
             List<String> skipIds = fetchCardsRequest.skipIds
             Integer count = fetchCardsRequest.count
-            List<Article> articles = articlesService.getLatestUnreadArticles(user, skipIds, count)
+            List<Article> articles = articlesService.getLatestUnreadArticles(user, skipIds, count, null, MAX_LENGTH_OF_SHORT_ARTICLE)
             return articles*.card
         } catch (e) {
-            log.error "fetching cards with latest articles for user ${user} with request ${fetchCardsRequest} failed: $e.message", e
-            throw new RuntimeException("fetching cards with latest articles for user ${user} with request ${fetchCardsRequest} failed", e)
+            log.error "fetching cards with short articles for user ${user} with request ${fetchCardsRequest} failed: $e.message", e
+            throw new RuntimeException("fetching cards with short articles for user ${user} with request ${fetchCardsRequest} failed", e)
         }
     }
 }

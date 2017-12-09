@@ -22,7 +22,11 @@ class ArticlesService {
     }
 
     List<Article> getLatestUnreadArticles(User user, List<String> skipIds, Integer count) {
-        log.debug "getting $count latest unread articles for user ${user.id} with skipIds=${skipIds}"
+        getLatestUnreadArticles(user, skipIds, count, null, null)
+    }
+
+    List<Article> getLatestUnreadArticles(User user, List<String> skipIds, Integer count, Integer minLength, Integer maxLength) {
+        log.debug "getting $count unread articles with min length ${minLength} and max length ${maxLength} for user ${user.id} with skipIds=${skipIds}"
 
         try {
             String params = "userId: \"${user.id}\""
@@ -31,6 +35,12 @@ class ArticlesService {
             }
             if (count != null) {
                 params += ", count: ${count}"
+            }
+            if (minLength != null) {
+                params += ", minLength: ${minLength}"
+            }
+            if (maxLength != null) {
+                params += ", maxLength: ${maxLength}"
             }
 
             def response = articlesServiceRest.post {
@@ -63,8 +73,8 @@ class ArticlesService {
 
             return response.data.latestUnread.collect({ new Article(it) })
         } catch (e) {
-            log.error "getting $count latest unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e
-            throw new RuntimeException("getting $count latest unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e)
+            log.error "getting $count unread articles with min length ${minLength} and max length ${maxLength} for user ${user.id} with skipIds=${skipIds} failed: $e.message", e
+            throw new RuntimeException("getting $count unread articles with min length ${minLength} and max length ${maxLength} for user ${user.id} with skipIds=${skipIds} failed: $e.message", e)
         }
     }
 }
