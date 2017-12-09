@@ -1,6 +1,5 @@
 package me.potic.sections.service
 
-import com.codahale.metrics.annotation.Counted
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpBuilder
 import me.potic.sections.domain.User
@@ -23,7 +22,6 @@ class UserService {
         }
     }
 
-    @Counted(name = 'findUserByAuth0Token.total')
     User findUserByAuth0Token(String auth0Token) {
         log.debug "finding user by auth0 token ${maskForLog(auth0Token)}"
 
