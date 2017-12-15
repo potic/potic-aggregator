@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 @Slf4j
 class ShortArticlesSectionFetcher implements SectionFetcher {
 
-    static final Section SECTION = new Section(id: 'short', title: 'short articles', priority: 4)
+    static final Section SECTION = new Section(id: 'short', title: 'short', priority: 4)
 
     static final Integer MAX_LENGTH_OF_SHORT_ARTICLE = 300
 

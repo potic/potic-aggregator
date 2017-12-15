@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 @Slf4j
 class LatestSectionFetcher implements SectionFetcher {
 
-    static final Section SECTION = new Section(id: 'latest', title: 'latest articles', priority: 1)
+    static final Section SECTION = new Section(id: 'latest', title: 'latest', priority: 1)
 
     @Autowired
     ArticlesService articlesService

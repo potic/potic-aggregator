@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 @Slf4j
 class RandomArticlesSection implements SectionFetcher {
 
-    static final Section SECTION = new Section(id: 'random', title: 'random articles', priority: 3)
+    static final Section SECTION = new Section(id: 'random', title: 'random', priority: 3)
 
     @Autowired
     ArticlesService articlesService
