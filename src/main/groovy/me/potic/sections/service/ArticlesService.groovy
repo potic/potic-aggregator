@@ -26,7 +26,7 @@ class ArticlesService {
     }
 
     List<Article> getLatestUnreadArticles(User user, List<String> skipIds, Integer count, Integer minLength, Integer maxLength) {
-        log.debug "getting $count unread articles with min length ${minLength} and max length ${maxLength} for user ${user.id} with skipIds=${skipIds}"
+        log.debug "getting $count latest unread articles with min length ${minLength} and max length ${maxLength} for user ${user.id} with skipIds=${skipIds}"
 
         try {
             String params = "userId: \"${user.id}\""
@@ -75,6 +75,56 @@ class ArticlesService {
         } catch (e) {
             log.error "getting $count unread articles with min length ${minLength} and max length ${maxLength} for user ${user.id} with skipIds=${skipIds} failed: $e.message", e
             throw new RuntimeException("getting $count unread articles with min length ${minLength} and max length ${maxLength} for user ${user.id} with skipIds=${skipIds} failed: $e.message", e)
+        }
+    }
+
+    List<Article> getRecommendedUnreadArticles(User user, String rankId, List<String> skipIds, Integer count) {
+        log.debug "getting $count recommended by ${rankId} unread articles for user ${user.id} with skipIds=${skipIds}"
+
+        try {
+            String params = "userId: \"${user.id}\""
+            if (rankId != null) {
+                params += ", rankId: \"${rankId}\""
+            }
+            if (skipIds != null) {
+                params += ", skipIds: ${skipIds.collect({ '"' + it + '"' })}"
+            }
+            if (count != null) {
+                params += ", count: ${count}"
+            }
+
+            def response = articlesServiceRest.post {
+                request.uri.path = '/graphql'
+                request.contentType = 'application/json'
+                request.body = [ query: """
+                    {
+                      recommendedUnread(${params}) {
+                        card {
+                            id
+                            pocketId
+                            actual
+                            url
+                            title
+                            source
+                            excerpt
+                            image {
+                                src
+                            }
+                        }
+                      }
+                    }
+                """ ]
+            }
+
+            List errors = response.errors
+            if (errors != null && !errors.empty) {
+                throw new RuntimeException("Request failed: $errors")
+            }
+
+            return response.data.recommendedUnread.collect({ new Article(it) })
+        } catch (e) {
+            log.error "getting $count recommended by ${rankId} unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e
+            throw new RuntimeException("getting $count recommended by ${rankId} unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e)
         }
     }
 
