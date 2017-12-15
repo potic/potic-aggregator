@@ -78,8 +78,8 @@ class ArticlesService {
         }
     }
 
-    List<Article> getRecommendedUnreadArticles(User user, String rankId, List<String> skipIds, Integer count) {
-        log.debug "getting $count recommended by ${rankId} unread articles for user ${user.id} with skipIds=${skipIds}"
+    List<Article> getRankedUnreadArticles(User user, String rankId, List<String> skipIds, Integer count) {
+        log.debug "getting $count ranked by ${rankId} unread articles for user ${user.id} with skipIds=${skipIds}"
 
         try {
             String params = "userId: \"${user.id}\""
@@ -98,7 +98,7 @@ class ArticlesService {
                 request.contentType = 'application/json'
                 request.body = [ query: """
                     {
-                      recommendedUnread(${params}) {
+                      rankedUnread(${params}) {
                         card {
                             id
                             pocketId
@@ -121,10 +121,10 @@ class ArticlesService {
                 throw new RuntimeException("Request failed: $errors")
             }
 
-            return response.data.recommendedUnread.collect({ new Article(it) })
+            return response.data.rankedUnread.collect({ new Article(it) })
         } catch (e) {
-            log.error "getting $count recommended by ${rankId} unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e
-            throw new RuntimeException("getting $count recommended by ${rankId} unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e)
+            log.error "getting $count ranked by ${rankId} unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e
+            throw new RuntimeException("getting $count ranked by ${rankId} unread articles for user ${user.id} with skipIds=${skipIds} failed: $e.message", e)
         }
     }
 

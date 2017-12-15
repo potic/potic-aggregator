@@ -36,7 +36,7 @@ class RecommendedArticlesSection implements SectionFetcher {
 
             String actualRankId = rankerService.getActualRankId()
 
-            List<Article> articles = articlesService.getRecommendedUnreadArticles(user, actualRankId, skipIds, count)
+            List<Article> articles = articlesService.getRankedUnreadArticles(user, actualRankId, skipIds, count)
             return articles*.card
         } catch (e) {
             log.error "fetching cards with recommended articles for user ${user} with request ${fetchCardsRequest} failed: $e.message", e
