@@ -15,8 +15,11 @@ appender('FILE', RollingFileAppender) {
         pattern = '%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
     }
 
-    rollingPolicy(TimeBasedRollingPolicy) {
-        FileNamePattern = "${System.getenv('LOG_PATH') ?: 'logs'}/potic-sections.%d{yyyy-MM-dd}.log"
+    rollingPolicy(SizeAndTimeBasedRollingPolicy) {
+        FileNamePattern = "${System.getenv('LOG_PATH') ?: 'logs'}/potic-sections.%d{yyyy-MM-dd}.%i.log"
+        MaxHistory = 30
+        MaxFileSize = "256MB"
+        TotalSizeCap = "4GB"
     }
 }
 
@@ -41,4 +44,4 @@ String SERVICE_LOG_LEVEL = System.getenv('SERVICE_LOG_LEVEL') ?: (System.getenv(
 String ROOT_LOG_LEVEL = System.getenv('ROOT_LOG_LEVEL') ?: 'WARN'
 
 root(toLevel(ROOT_LOG_LEVEL), ['STDOUT', 'FILE', 'LOGZIO' ])
-logger('me.potic.sections', toLevel(SERVICE_LOG_LEVEL), [ 'STDOUT', 'FILE', 'LOGZIO' ], false)
+logger('me.potic', toLevel(SERVICE_LOG_LEVEL), [ 'STDOUT', 'FILE', 'LOGZIO' ], false)
