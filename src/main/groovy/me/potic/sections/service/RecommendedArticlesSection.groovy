@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 @Slf4j
 class RecommendedArticlesSection implements SectionFetcher {
 
-    static final Section SECTION = new Section(id: 'recommended', title: 'recommended', priority: 2)
+    static final Section SECTION = new Section(id: 'recommended', title: 'recommended', priority: 1)
 
     @Autowired
     ArticlesService articlesService
