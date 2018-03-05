@@ -100,9 +100,9 @@ class ArticlesService {
                 request.contentType = 'application/json'
                 request.body = [ query: """
                     {
-                      id
-                        
                       rankedUnread(${params}) {
+                        id
+                        
                         card {
                             id
                             pocketId
