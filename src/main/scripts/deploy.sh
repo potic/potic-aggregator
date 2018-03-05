@@ -21,7 +21,7 @@ warn "Pulling latest docker image..."
 docker pull potic/potic-sections:$TAG_TO_DEPLOY
 
 warn "Starting docker image..."
-docker run -dit --name potic-sections --link potic-articles --link potic-users --link potic-ranker -e LOG_PATH=/mnt/logs -e LOGZIO_TOKEN=$LOGZIO_TOKEN -v /mnt/logs:/mnt/logs -p 40401:8080 potic/potic-sections:$TAG_TO_DEPLOY
+docker run -dit --name potic-sections --link potic-articles --link potic-users --link potic-ranker --link potic-feedback -e LOG_PATH=/mnt/logs -e LOGZIO_TOKEN=$LOGZIO_TOKEN -v /mnt/logs:/mnt/logs -p 40401:8080 potic/potic-sections:$TAG_TO_DEPLOY
 
 warn "Currently running docker images"
 docker ps -a

@@ -5,9 +5,11 @@ import com.codahale.metrics.Timer
 import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import me.potic.sections.SectionFetcher
+import me.potic.sections.domain.Article
 import me.potic.sections.domain.Card
 import me.potic.sections.domain.Section
 import me.potic.sections.domain.User
+import me.potic.sections.service.FeedbackService
 import me.potic.sections.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -25,6 +27,9 @@ class SectionsController {
 
     @Autowired
     UserService userService
+
+    @Autowired
+    FeedbackService feedbackService
 
     @Autowired
     Collection<SectionFetcher> sectionFetchers
@@ -56,8 +61,9 @@ class SectionsController {
         try {
             User user = userService.findUserByAuth0Token(principal.token)
             SectionFetcher sectionFetcher = sectionFetchers.find { it.section().id == sectionId }
-            List<Card> cards = sectionFetcher.fetch(user, fetchCardsRequest)
-            return new ResponseEntity<>(cards, HttpStatus.OK)
+            List<Article> articles = sectionFetcher.fetch(user, fetchCardsRequest)
+            articles.each { article -> feedbackService.showed(user, article) }
+            return new ResponseEntity<>(articles*.card, HttpStatus.OK)
         } catch (e) {
             log.error "POST request for /section/${sectionId} with token=${maskForLog(principal.token)} and body=${fetchCardsRequest} failed: $e.message", e
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)

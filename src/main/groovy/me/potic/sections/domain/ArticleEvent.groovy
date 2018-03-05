@@ -2,14 +2,18 @@ package me.potic.sections.domain
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-import groovy.transform.builder.Builder
 
-@Builder
+import java.time.LocalDateTime
+
 @EqualsAndHashCode
 @ToString(includeNames = true)
-class Article {
+class ArticleEvent {
 
-    String id
+    String userId
 
-    Card card
+    String articleId
+
+    ArticleEventType type
+
+    LocalDateTime timestamp
 }

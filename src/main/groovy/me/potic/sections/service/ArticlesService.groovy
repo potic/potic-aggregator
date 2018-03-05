@@ -49,6 +49,8 @@ class ArticlesService {
                 request.body = [ query: """
                     {
                       latestUnread(${params}) {
+                        id
+                        
                         card {
                             id
                             pocketId
@@ -98,6 +100,8 @@ class ArticlesService {
                 request.contentType = 'application/json'
                 request.body = [ query: """
                     {
+                      id
+                        
                       rankedUnread(${params}) {
                         card {
                             id
@@ -146,6 +150,8 @@ class ArticlesService {
                 request.body = [ query: """
                     {
                       randomUnread(${params}) {
+                        id
+                        
                         card {
                             id
                             pocketId
