@@ -33,7 +33,7 @@ class FeedbackService {
             articleEvent.type = ArticleEventType.SHOWED
             articleEvent.articleId = article.id
             articleEvent.userId = user.id
-            articleEvent.timestamp = LocalDateTime.now()
+            articleEvent.timestamp = LocalDateTime.now().toString()
 
             feedbackServiceRest.post {
                 request.uri.path = "/event"
