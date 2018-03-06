@@ -45,4 +45,25 @@ class FeedbackService {
             throw new RuntimeException("emitting SHOWED event for user ${user} and article ${article} failed: $e.message", e)
         }
     }
+
+    void skipped(User user, String articleId) {
+        log.debug "emitting SKIPPED event for user ${user} and article #${articleId}..."
+
+        try {
+            ArticleEvent articleEvent = new ArticleEvent()
+            articleEvent.type = ArticleEventType.SKIPPED
+            articleEvent.articleId = articleId
+            articleEvent.userId = user.id
+            articleEvent.timestamp = LocalDateTime.now().toString()
+
+            feedbackServiceRest.post {
+                request.uri.path = "/event"
+                request.body = articleEvent
+                request.contentType = 'application/json'
+            }
+        } catch (e) {
+            log.error "emitting SKIPPED event for user ${user} and article #${articleId} failed: $e.message", e
+            throw new RuntimeException("emitting SKIPPED event for user ${user} and article #${articleId} failed: $e.message", e)
+        }
+    }
 }

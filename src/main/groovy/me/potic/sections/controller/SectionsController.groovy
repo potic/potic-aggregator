@@ -63,6 +63,9 @@ class SectionsController {
             SectionFetcher sectionFetcher = sectionFetchers.find { it.section().id == sectionId }
             List<Article> articles = sectionFetcher.fetch(user, fetchCardsRequest)
             articles.each { article -> feedbackService.showed(user, article) }
+            if (fetchCardsRequest.skipIds != null) {
+                fetchCardsRequest.skipIds.each { skipId -> feedbackService.skipped(user, articleId) }
+            }
             return new ResponseEntity<>(articles*.card, HttpStatus.OK)
         } catch (e) {
             log.error "POST request for /section/${sectionId} with token=${maskForLog(principal.token)} and body=${fetchCardsRequest} failed: $e.message", e
