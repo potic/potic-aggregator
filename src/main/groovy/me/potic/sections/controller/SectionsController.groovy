@@ -64,7 +64,7 @@ class SectionsController {
             List<Article> articles = sectionFetcher.fetch(user, fetchCardsRequest)
             articles.each { article -> feedbackService.showed(user, article) }
             if (fetchCardsRequest.skipIds != null) {
-                fetchCardsRequest.skipIds.each { skipId -> feedbackService.skipped(user, articleId) }
+                fetchCardsRequest.skipIds.each { skipId -> feedbackService.skipped(user, skipId) }
             }
             return new ResponseEntity<>(articles*.card, HttpStatus.OK)
         } catch (e) {
