@@ -53,8 +53,8 @@ class ArticlesService {
                         
                         card {
                             id
+                            timestamp
                             pocketId
-                            actual
                             url
                             title
                             source
@@ -105,8 +105,8 @@ class ArticlesService {
                         
                         card {
                             id
+                            timestamp
                             pocketId
-                            actual
                             url
                             title
                             source
@@ -154,8 +154,8 @@ class ArticlesService {
                         
                         card {
                             id
+                            timestamp
                             pocketId
-                            actual
                             url
                             title
                             source
