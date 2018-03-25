@@ -24,12 +24,12 @@ class ModelsService {
         log.debug "requesting actual model..."
 
         try {
-            Model response = modelsServiceRest.get(Model) {
+            def response = modelsServiceRest.get {
                 request.uri.path = '/actual'
                 request.contentType = 'application/json'
             }
 
-            return response
+            return new Model(response)
         } catch (e) {
             log.error "requesting actual rank id failed: $e.message", e
             throw new RuntimeException("requesting actual rank id failed", e)
