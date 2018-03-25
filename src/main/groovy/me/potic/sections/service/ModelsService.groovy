@@ -2,28 +2,29 @@ package me.potic.sections.service
 
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpBuilder
+import me.potic.sections.domain.Model
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
 @Slf4j
-class RankerService {
+class ModelsService {
 
-    HttpBuilder rankerServiceRest
+    HttpBuilder modelsServiceRest
 
     @Autowired
-    HttpBuilder rankerServiceRest(@Value('${services.ranker.url}') String rankerServiceUrl) {
-        rankerServiceRest = HttpBuilder.configure {
-            request.uri = rankerServiceUrl
+    HttpBuilder modelsServiceRest(@Value('${services.models.url}') String modelsServiceUrl) {
+        modelsServiceRest = HttpBuilder.configure {
+            request.uri = modelsServiceUrl
         }
     }
 
-    String getActualRankId() {
-        log.debug "requesting actual rank id..."
+    Model getActualModel() {
+        log.debug "requesting actual model..."
 
         try {
-            String response = rankerServiceRest.get(String) {
+            Model response = modelsServiceRest.get(Model) {
                 request.uri.path = '/actual'
                 request.contentType = 'application/json'
             }

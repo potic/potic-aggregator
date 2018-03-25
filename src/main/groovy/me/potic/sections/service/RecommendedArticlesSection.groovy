@@ -3,6 +3,7 @@ package me.potic.sections.service
 import groovy.util.logging.Slf4j
 import me.potic.sections.SectionFetcher
 import me.potic.sections.domain.Article
+import me.potic.sections.domain.Model
 import me.potic.sections.domain.Section
 import me.potic.sections.domain.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +19,7 @@ class RecommendedArticlesSection implements SectionFetcher {
     ArticlesService articlesService
 
     @Autowired
-    RankerService rankerService
+    ModelsService modelsService
 
     @Override
     Section section() {
@@ -33,10 +34,9 @@ class RecommendedArticlesSection implements SectionFetcher {
             List<String> skipIds = fetchCardsRequest.skipIds
             Integer count = fetchCardsRequest.count
 
-            String actualRankId = rankerService.getActualRankId()
+            Model actualModel = modelsService.getActualModel()
 
-            List<Article> articles = articlesService.getRankedUnreadArticles(user, actualRankId, skipIds, count)
-            return articles
+            return articlesService.getRankedUnreadArticles(user, "${actualModel.name}:${actualModel.version}", skipIds, count)
         } catch (e) {
             log.error "fetching cards with recommended articles for user ${user} with request ${fetchCardsRequest} failed: $e.message", e
             throw new RuntimeException("fetching cards with recommended articles for user ${user} with request ${fetchCardsRequest} failed", e)
