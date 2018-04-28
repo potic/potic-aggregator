@@ -41,8 +41,7 @@ class FeedbackService {
                 request.contentType = 'application/json'
             }
         } catch (e) {
-            log.error "emitting SHOWED event for user ${user} and article ${article} failed: $e.message", e
-            throw new RuntimeException("emitting SHOWED event for user ${user} and article ${article} failed: $e.message", e)
+            log.warn "emitting SHOWED event for user ${user} and article ${article} failed: $e.message", e
         }
     }
 
@@ -62,8 +61,7 @@ class FeedbackService {
                 request.contentType = 'application/json'
             }
         } catch (e) {
-            log.error "emitting SKIPPED event for user ${user} and article #${articleId} failed: $e.message", e
-            throw new RuntimeException("emitting SKIPPED event for user ${user} and article #${articleId} failed: $e.message", e)
+            log.warn "emitting SKIPPED event for user ${user} and article #${articleId} failed: $e.message", e
         }
     }
 }
