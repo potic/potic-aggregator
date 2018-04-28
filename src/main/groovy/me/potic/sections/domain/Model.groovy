@@ -7,13 +7,17 @@ import groovy.transform.ToString
 @ToString(includeNames = true)
 class Model {
 
+    String id
+
     String name
 
     String version
 
     String description
 
-    String timestamp
+    String trainTimestamp
+
+    String serializedModel
 
     boolean isActive
 }
