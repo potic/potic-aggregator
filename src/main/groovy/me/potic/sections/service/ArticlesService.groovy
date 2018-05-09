@@ -59,6 +59,7 @@ class ArticlesService {
                             title
                             source
                             excerpt
+                            addedTimestamp
                             image {
                                 src
                             }
