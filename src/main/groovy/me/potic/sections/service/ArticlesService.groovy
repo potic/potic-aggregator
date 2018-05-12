@@ -112,6 +112,7 @@ class ArticlesService {
                             title
                             source
                             excerpt
+                            addedTimestamp
                             image {
                                 src
                             }
@@ -161,6 +162,7 @@ class ArticlesService {
                             title
                             source
                             excerpt
+                            addedTimestamp
                             image {
                                 src
                             }
